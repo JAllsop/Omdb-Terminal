@@ -2,6 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var mySql = builder.AddMySql("mysql-server")
                    .WithImageTag("8.4.8") // latest LTS version
+                   .WithDataVolume("omdb-terminal-data")
                    .AddDatabase("OmdbCacheDb");
 
 var apiService = builder.AddProject<Projects.OmdbTerminal_ApiService>("apiservice")
