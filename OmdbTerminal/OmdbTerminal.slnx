@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="OmdbTerminal.ApiService/OmdbTerminal.ApiService.csproj" />
+  <Project Path="OmdbTerminal.AppHost/OmdbTerminal.AppHost.csproj" />
+  <Project Path="OmdbTerminal.Cli/OmdbTerminal.Cli.csproj" />
+  <Project Path="OmdbTerminal.ServiceDefaults/OmdbTerminal.ServiceDefaults.csproj" />
+  <Project Path="OmdbTerminal.Shared/OmdbTerminal.Shared.csproj" />
+</Solution>
