@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using OmdbTerminal.Shared.Converters;
+using System.Text.Json.Serialization;
 
 namespace OmdbTerminal.Shared;
 
@@ -35,7 +36,8 @@ public class OmdbSearchResponse
     public string? TotalResults { get; set; }
 
     [JsonPropertyName("Response")]
-    public string Response { get; set; } = "False";
+    [JsonConverter(typeof(StringToBoolConverter))]
+    public bool Response { get; set; } = false;
 
     [JsonPropertyName("Error")]
     public string? Error { get; set; }
@@ -80,5 +82,6 @@ public class MovieDetails
     public string PosterUrl { get; set; } = default!;
 
     [JsonPropertyName("Response")]
-    public string Response { get; set; } = "False";
+    [JsonConverter(typeof(StringToBoolConverter))]
+    public bool Response { get; set; } = false;
 }
