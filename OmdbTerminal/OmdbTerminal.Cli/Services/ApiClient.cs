@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 namespace OmdbTerminal.Cli.Services
 {
-    internal class ApiClient(HttpClient httpClient) : IApiClient
+    internal class ApiClient(MoviesHttpClient moviesClient, CachedEntriesHttpClient cachedEntriesClient) : IApiClient
     {
         public async Task SearchAndDisplayAsync(string title)
         {
@@ -10,7 +10,7 @@ namespace OmdbTerminal.Cli.Services
             {
                 Console.WriteLine($"\n Searching OMDB for '{title}'...");
 
-                var response = await httpClient.GetFromJsonAsync<OmdbSearchResponse>($"movies/search?title={title}");
+                var response = await moviesClient.GetFromJsonAsync<OmdbSearchResponse>($"search?title={title}");
 
                 if (response == null || !response.Response || response.Results == null)
                 {
@@ -37,7 +37,7 @@ namespace OmdbTerminal.Cli.Services
             {
                 Console.WriteLine($"\n Fetching details for IMDB ID '{id}'...");
 
-                var response = await httpClient.GetFromJsonAsync<MovieDetails>($"movies/details/{id}");
+                var response = await moviesClient.GetFromJsonAsync<MovieDetails>($"details/{id}");
                 if (response == null)
                 {
                     Console.WriteLine("\n Movie not found or API error\n");
@@ -55,6 +55,25 @@ namespace OmdbTerminal.Cli.Services
                 Console.WriteLine($"IMDB Rating: {response.ImdbRating}");
                 Console.WriteLine($"Poster URL: {response.PosterUrl}");
                 Console.WriteLine("--------------------------------------\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n Error communicating with API: {ex.Message}\n");
+            }
+        }
+
+        public async Task ClearCacheAndDisplayAsync()
+        {
+            try
+            {
+                Console.WriteLine("\n Clearing cache...");
+                var response = await cachedEntriesClient.DeleteFromJsonAsync<ClearCacheResponse>("clear");
+                if (response == null || !response.Success)
+                {
+                    Console.WriteLine($"\n Failed to clear cache: {response?.Message}\n");
+                }
+
+                Console.WriteLine($"\n {response?.Message ?? "Cache cleared successfully."}\n");
             }
             catch (Exception ex)
             {

@@ -20,7 +20,8 @@ class Program
             Console.WriteLine("Select an option:");
             Console.WriteLine("1. Search OMDB");
             Console.WriteLine("2. Get movie details by IMDB ID (and cache result)");
-            Console.WriteLine("3. Quit");
+            Console.WriteLine("3. Clear cache");
+            Console.WriteLine("4. Quit");
             Console.Write("\n> ");
 
             var input = Console.ReadLine();
@@ -44,6 +45,18 @@ class Program
                     }
                     break;
                 case "3":
+                    Console.Write("Are you sure you want to clear the cache? (y/n): ");
+                    var confirm = Console.ReadLine();
+                    if (confirm?.Trim().ToLower() == "y")
+                    {
+                        await apiClient.ClearCacheAndDisplayAsync();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cache clear cancelled\n");
+                    }
+                    break;
+                case "4":
                 case "q":
                 case "quit":
                     isRunning = false;

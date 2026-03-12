@@ -1,8 +1,5 @@
 ﻿using OmdbTerminal.Cli.Services;
 using SimpleInjector;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OmdbTerminal.Cli
 {
@@ -14,10 +11,8 @@ namespace OmdbTerminal.Cli
         {
             Container = new Container();
 
-            Container.RegisterSingleton(() => new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7254/")
-            });
+            Container.RegisterSingleton(() => new CachedEntriesHttpClient());
+            Container.RegisterSingleton(() => new MoviesHttpClient());
 
             Container.Register<IApiClient, ApiClient>();
             Container.Verify();

@@ -54,5 +54,12 @@ namespace OmdbTerminal.ApiService.Controllers
             var success = await cachedService.DeleteAsync(id);
             return success ? NoContent() : NotFound();
         }
+
+        [HttpDelete("clear")]
+        public async Task<IActionResult> ClearCache()
+        {
+            var deletedCount = await cachedService.ClearCacheAsync();
+            return Ok(new ClearCacheResponse { Success = true, Message = $"Successfully cleared {deletedCount} cached entries" });
+        }
     }
 }
