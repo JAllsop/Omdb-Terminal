@@ -45,29 +45,29 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 *Searching for movies by title*
 
-<img src="Screenshots/V1/CLI_Search.png" alt="CLI Search Example" width="500" />
+<img src="Screenshots/V1/CLI_Search.png" alt="CLI Search Example" width="600" />
 
 *Fetching and caching detailed movie data by IMDb ID*
 
-<img src="Screenshots/V1/CLI_Lookup.png" alt="CLI Lookup Example" width="500" />
+<img src="Screenshots/V1/CLI_Lookup.png" alt="CLI Lookup Example" width="600" />
 
 *Manually creating a cached entry via the CLI*
 
-<img src="Screenshots/V1/CLI_Create.png" alt="CLI Create Example" width="500" />
+<img src="Screenshots/V1/CLI_Create.png" alt="CLI Create Example" width="600" />
 
 ### .NET Aspire Infrastructure
 
 *The .NET Aspire Dashboard showing live telemetry, traces, and connected resources*
 
-<img src="Screenshots/Aspire_Dashboard.png" alt="Aspire Dashboard" width="500" />
+<img src="Screenshots/Aspire_Dashboard.png" alt="Aspire Dashboard" width="600" />
 
 *Startup logs demonstrating automatic MySQL container provisioning and EF Core migration execution*
 
-<img src="Screenshots/Aspire_Console.jpg" alt="Aspire Console Logs" width="500" />
+<img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="600" />
 
 ### 🎥 Demo Video
 Check out the full end-to-end workflow in action:
-<video src="https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/blob/enhancement/v1-cleanup-for-release/Screenshots/V1/Demo.mp4" muted autoplay loop playsinline style="max-width: 100%;">
+<video src="Screenshots/V1/Demo.mp4" muted autoplay loop playsinline style="max-width: 100%;">
 </video>
 
 ## 🔮 Planned Improvements (V2)
