@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OmdbTerminal.ApiService.Services;
 using OmdbTerminal.Shared;
-using static System.Net.WebRequestMethods;
 
 namespace OmdbTerminal.ApiService.Controllers;
 
