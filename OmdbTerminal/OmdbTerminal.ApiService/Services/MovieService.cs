@@ -4,13 +4,13 @@ using OmdbTerminal.Shared;
 
 namespace OmdbTerminal.ApiService.Services
 {
-    public class MovieService(IOmdbClient omdbClient, OmdbDbContext dbContext, ILogger<MovieService> logger) : IMovieService
+    public class MovieService(IOmdbClient omdbClient, ICachedEntriesService cacheService, ILogger<MovieService> logger) : IMovieService
     {
         public async Task<OmdbSearchResponse> SearchAsync(string title, int page = 1) => await omdbClient.SearchMoviesAsync(title, page); // Search is live, so we go straight to the client
 
         public async Task<MovieEntity?> GetDetailsAsync(string imdbId)
         {
-            var cached = await dbContext.CachedMovies.FirstOrDefaultAsync(m => m.ImdbId == imdbId);
+            var cached = await cacheService.GetByIdAsync(imdbId);
 
             if (cached != null)
             {
@@ -24,8 +24,7 @@ namespace OmdbTerminal.ApiService.Services
             if (!details.Response) return null;
 
             var entity = details.ToEntity();
-            dbContext.CachedMovies.Add(entity);
-            await dbContext.SaveChangesAsync();
+            await cacheService.CreateAsync(entity);
 
             return entity;
         }
