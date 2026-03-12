@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OmdbTerminal.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace OmdbTerminal.ApiService.Data
 {
@@ -30,5 +31,22 @@ namespace OmdbTerminal.ApiService.Data
         public bool IsCustom { get; set; } = false;
 
         public DateTime CachedAt { get; set; } = DateTime.UtcNow;
+
+        public MovieDetails ToDetails()
+            => new()
+            {
+                Title = this.Title,
+                Year = this.Year,
+                Rated = this.Rated,
+                Released = this.Released,
+                Runtime = this.Runtime,
+                Genre = this.Genre,
+                Director = this.Director,
+                Plot = this.Plot,
+                ImdbId = this.Id,
+                ImdbRating = this.ImdbRating,
+                PosterUrl = this.PosterUrl,
+                IsCustom = this.IsCustom
+            };
     }
 }

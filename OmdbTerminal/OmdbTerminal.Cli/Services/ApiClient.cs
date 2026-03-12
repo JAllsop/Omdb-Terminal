@@ -36,13 +36,14 @@ namespace OmdbTerminal.Cli.Services
             try
             {
                 Console.WriteLine($"\n Fetching details for IMDB ID '{id}'...");
+
                 var response = await httpClient.GetFromJsonAsync<MovieDetails>($"movies/details/{id}");
                 if (response == null)
                 {
                     Console.WriteLine("\n Movie not found or API error\n");
                     return;
                 }
-                Console.WriteLine($"\n--- Details for '{response.Title}' ---");
+
                 Console.WriteLine($"Title: {response.Title}");
                 Console.WriteLine($"Year: {response.Year}");
                 Console.WriteLine($"Rated: {response.Rated}");
