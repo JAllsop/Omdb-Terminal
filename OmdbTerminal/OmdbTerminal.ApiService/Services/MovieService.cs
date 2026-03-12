@@ -8,14 +8,14 @@ namespace OmdbTerminal.ApiService.Services
     {
         public async Task<OmdbSearchResponse> SearchAsync(string title, int page = 1) => await omdbClient.SearchMoviesAsync(title, page); // Search is live, so we go straight to the client
 
-        public async Task<MovieEntity?> GetDetailsAsync(string imdbId)
+        public async Task<MovieDetails?> GetDetailsAsync(string imdbId)
         {
             var cached = await cacheService.GetByIdAsync(imdbId);
 
             if (cached != null)
             {
                 logger.LogInformation("Cache HIT for {Id}", imdbId);
-                return cached;
+                return cached.ToDetails();
             }
 
             logger.LogInformation("Cache MISS for {Id}. Fetching from OMDB...", imdbId);
@@ -26,7 +26,7 @@ namespace OmdbTerminal.ApiService.Services
             var entity = details.ToEntity();
             await cacheService.CreateAsync(entity);
 
-            return entity;
+            return details;
         }
     }
 }

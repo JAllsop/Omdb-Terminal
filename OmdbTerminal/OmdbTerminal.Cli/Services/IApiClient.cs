@@ -9,5 +9,9 @@ namespace OmdbTerminal.Cli.Services
         Task SearchAndDisplayAsync(string title);
 
         Task SearchByImdbIdAndDisplayAsync(string id);
+
+        Task ClearCacheAndDisplayAsync();
+
+        Task ManageCustomEntitiesAsync();
     }
 }

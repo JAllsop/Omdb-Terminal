@@ -1,4 +1,5 @@
-﻿using OmdbTerminal.ApiService.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OmdbTerminal.ApiService.Data;
 
 namespace OmdbTerminal.ApiService.Services
 {
@@ -50,6 +51,12 @@ namespace OmdbTerminal.ApiService.Services
             dbContext.CachedMovies.Remove(movie);
             await dbContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<int> ClearCacheAsync()
+        {
+            var deletedCount = await dbContext.CachedMovies.ExecuteDeleteAsync();
+            return deletedCount;
         }
     }
 }

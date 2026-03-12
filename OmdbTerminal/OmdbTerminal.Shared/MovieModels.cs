@@ -55,31 +55,31 @@ public class MovieDetails
     public string Year { get; set; } = default!;
 
     [JsonPropertyName("Rated")]
-    public string Rated { get; set; } = default!;
+    public string? Rated { get; set; }
 
     [JsonPropertyName("Released")]
-    public string Released { get; set; } = default!;
+    public string? Released { get; set; }
 
     [JsonPropertyName("Runtime")]
-    public string Runtime { get; set; } = default!;
+    public string? Runtime { get; set; }
 
     [JsonPropertyName("Genre")]
-    public string Genre { get; set; } = default!;
+    public string? Genre { get; set; }
 
     [JsonPropertyName("Director")]
-    public string Director { get; set; } = default!;
+    public string? Director { get; set; }
 
     [JsonPropertyName("Plot")]
-    public string Plot { get; set; } = default!;
+    public string? Plot { get; set; }
 
     [JsonPropertyName("imdbID")]
     public string ImdbId { get; set; } = default!;
 
     [JsonPropertyName("imdbRating")]
-    public string ImdbRating { get; set; } = default!;
+    public string? ImdbRating { get; set; }
 
     [JsonPropertyName("Poster")]
-    public string PosterUrl { get; set; } = default!;
+    public string? PosterUrl { get; set; }
 
     [JsonPropertyName("Response")]
     [JsonConverter(typeof(StringToBoolConverter))]

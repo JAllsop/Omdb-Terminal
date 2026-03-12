@@ -13,5 +13,7 @@ namespace OmdbTerminal.ApiService.Services
         Task<bool> UpdateAsync(string id, MovieEntity updatedMovie);
 
         Task<bool> DeleteAsync(string id);
+
+        Task<int> ClearCacheAsync();
     }
 }

@@ -21,5 +21,21 @@ namespace OmdbTerminal.ApiService.Data
                 PosterUrl = details.PosterUrl,
                 CachedAt = DateTime.UtcNow
             };
+
+        public static MovieDetails ToDetails(this MovieEntity entity)
+            => new()
+            {
+                Title = entity.Title,
+                Year = entity.Year,
+                Rated = entity.Rated,
+                Released = entity.Released,
+                Runtime = entity.Runtime,
+                Genre = entity.Genre,
+                Director = entity.Director,
+                Plot = entity.Plot,
+                ImdbId = entity.Id,
+                ImdbRating = entity.ImdbRating,
+                PosterUrl = entity.PosterUrl
+            };
     }
 }

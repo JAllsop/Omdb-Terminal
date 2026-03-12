@@ -12,7 +12,7 @@ using OmdbTerminal.ApiService.Data;
 namespace OmdbTerminal.ApiService.Data.Migrations
 {
     [DbContext(typeof(OmdbDbContext))]
-    [Migration("20260310180516_InitialCreate")]
+    [Migration("20260312181227_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,22 +27,37 @@ namespace OmdbTerminal.ApiService.Data.Migrations
 
             modelBuilder.Entity("OmdbTerminal.ApiService.Data.MovieEntity", b =>
                 {
-                    b.Property<string>("ImdbId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CachedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Genre")
-                        .IsRequired()
+                    b.Property<string>("Director")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Genre")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImdbRating")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsCustom")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Plot")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("PosterUrl")
-                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Rated")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Released")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Runtime")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
@@ -53,7 +68,7 @@ namespace OmdbTerminal.ApiService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("ImdbId");
+                    b.HasKey("Id");
 
                     b.ToTable("CachedMovies");
                 });

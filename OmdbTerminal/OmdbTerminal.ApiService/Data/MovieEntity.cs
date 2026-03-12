@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OmdbTerminal.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace OmdbTerminal.ApiService.Data
 {
@@ -11,21 +12,21 @@ namespace OmdbTerminal.ApiService.Data
 
         public string Year { get; set; } = default!;
 
-        public string Rated { get; set; } = default!;
+        public string? Rated { get; set; }
 
-        public string Released { get; set; } = default!;
+        public string? Released { get; set; }
 
-        public string Runtime { get; set; } = default!;
+        public string? Runtime { get; set; }
 
-        public string Genre { get; set; } = default!;
+        public string? Genre { get; set; }
 
-        public string Director { get; set; } = default!;
+        public string? Director { get; set; }
 
-        public string Plot { get; set; } = default!;
+        public string? Plot { get; set; }
 
-        public string ImdbRating { get; set; } = default!;
+        public string? ImdbRating { get; set; }
 
-        public string PosterUrl { get; set; } = default!;
+        public string? PosterUrl { get; set; }
 
         public bool IsCustom { get; set; } = false;
 

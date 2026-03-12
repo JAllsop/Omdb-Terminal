@@ -31,38 +31,30 @@ namespace OmdbTerminal.ApiService.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Director")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Genre")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImdbRating")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsCustom")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Plot")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("PosterUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Rated")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Released")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Runtime")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
