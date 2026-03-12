@@ -66,11 +66,10 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 <img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="750" />
 
 ### 🎥 Demo Video
-Check out the full end-to-end workflow in action:
 
 https://github.com/user-attachments/assets/53edacd8-fb5f-4208-97d6-a5a10ba4d57e
 
-## 🔮 Planned Improvements (V2)
+## Planned Improvements (V2)
 
 While V1 establishes a rock-solid backend foundation and MVP loop, V2 will focus on significantly enhancing the user interface and expanding the application's intelligence.
 
