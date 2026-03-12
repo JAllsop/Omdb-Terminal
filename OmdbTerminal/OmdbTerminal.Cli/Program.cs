@@ -21,7 +21,8 @@ class Program
             Console.WriteLine("1. Search OMDB");
             Console.WriteLine("2. Get movie details by IMDB ID (and cache result)");
             Console.WriteLine("3. Clear cache");
-            Console.WriteLine("4. Quit");
+            Console.WriteLine("4. Manage Cached Entries (CRUD)");
+            Console.WriteLine("5. Quit");
             Console.Write("\n> ");
 
             var input = Console.ReadLine();
@@ -57,6 +58,9 @@ class Program
                     }
                     break;
                 case "4":
+                    await apiClient.ManageCustomEntitiesAsync();
+                    break;
+                case "5":
                 case "q":
                 case "quit":
                     isRunning = false;
