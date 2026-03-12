@@ -84,4 +84,6 @@ public class MovieDetails
     [JsonPropertyName("Response")]
     [JsonConverter(typeof(StringToBoolConverter))]
     public bool Response { get; set; } = false;
+
+    public bool IsCustom { get; set; } = false;
 }

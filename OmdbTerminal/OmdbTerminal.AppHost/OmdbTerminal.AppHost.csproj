@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OmdbTerminal.ApiService\OmdbTerminal.ApiService.csproj" />
-    <ProjectReference Include="..\OmdbTerminal.Shared\OmdbTerminal.Shared.csproj" />
+    <ProjectReference Include="..\OmdbTerminal.Shared\OmdbTerminal.Shared.csproj" IsAspireProjectResource="false"/>
   </ItemGroup>
 
 </Project>
