@@ -12,6 +12,12 @@
 
 </div>
 
+<div align="center">
+
+   [![Build and Release CLI](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml/badge.svg)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml)
+
+</div>
+
 OMDB Terminal is a .NET-based CLI application and REST API designed to interact with the [Open Movie Database (OMDb) API](https://www.omdbapi.com/). Built with a focus on modern .NET architecture (.NET 10), performance, and developer experience. It serves as a proxy for movie data, has intelligent caching and OData search capabilities.
 
 The project is orchestrated using .NET Aspire, which handles containerization, telemetry, and infrastructure management, allowing developers to focus on building features without worrying about setup or configuration.
