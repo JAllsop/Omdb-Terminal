@@ -16,7 +16,7 @@ namespace OmdbTerminal.ApiService.Services
 
         public async Task<bool> CreateAsync(MovieEntity movie)
         {
-            var existingMovie = await dbContext.CachedMovies.FindAsync(movie.ImdbId);
+            var existingMovie = await dbContext.CachedMovies.FindAsync(movie.Id);
             if (existingMovie != null) return false;
 
             movie.CachedAt = DateTime.UtcNow;

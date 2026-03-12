@@ -8,12 +8,17 @@ namespace OmdbTerminal.ApiService.Data
         public static MovieEntity ToEntity(this MovieDetails details)
             => new()
             {
-                ImdbId = details.ImdbId,
+                Id = details.ImdbId,
                 Title = details.Title,
                 Year = details.Year,
-                Plot = details.Plot,
-                PosterUrl = details.PosterUrl,
+                Rated = details.Rated,
+                Released = details.Released,
+                Runtime = details.Runtime,
                 Genre = details.Genre,
+                Director = details.Director,
+                Plot = details.Plot,
+                ImdbRating = details.ImdbRating,
+                PosterUrl = details.PosterUrl,
                 CachedAt = DateTime.UtcNow
             };
     }
