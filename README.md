@@ -67,8 +67,8 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 ### 🎥 Demo Video
 Check out the full end-to-end workflow in action:
-<video src="Screenshots/V1/Demo.mp4" muted autoplay loop playsinline style="max-width: 100%;">
-</video>
+
+https://github.com/user-attachments/assets/53edacd8-fb5f-4208-97d6-a5a10ba4d57e
 
 ## 🔮 Planned Improvements (V2)
 
