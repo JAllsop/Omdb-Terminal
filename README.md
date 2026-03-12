@@ -45,25 +45,25 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 *Searching for movies by title*
 
-<img src="Screenshots/V1/CLI_Search.png" alt="CLI Search Example" width="600" />
+<img src="Screenshots/V1/CLI_Search.png" alt="CLI Search Example" width="750" />
 
 *Fetching and caching detailed movie data by IMDb ID*
 
-<img src="Screenshots/V1/CLI_Lookup.png" alt="CLI Lookup Example" width="600" />
+<img src="Screenshots/V1/CLI_Lookup.png" alt="CLI Lookup Example" width="750" />
 
 *Manually creating a cached entry via the CLI*
 
-<img src="Screenshots/V1/CLI_Create.png" alt="CLI Create Example" width="600" />
+<img src="Screenshots/V1/CLI_Create.png" alt="CLI Create Example" width="750" />
 
 ### .NET Aspire Infrastructure
 
 *The .NET Aspire Dashboard showing live telemetry, traces, and connected resources*
 
-<img src="Screenshots/Aspire_Dashboard.png" alt="Aspire Dashboard" width="600" />
+<img src="Screenshots/Aspire_Dashboard.png" alt="Aspire Dashboard" width="750" />
 
 *Startup logs demonstrating automatic MySQL container provisioning and EF Core migration execution*
 
-<img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="600" />
+<img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="750" />
 
 ### 🎥 Demo Video
 Check out the full end-to-end workflow in action:
