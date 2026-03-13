@@ -6,11 +6,11 @@ namespace OmdbTerminal.ApiService.Services
 {
     public class MovieService(IOmdbClient omdbClient, ICachedEntriesService cacheService, ILogger<MovieService> logger) : IMovieService
     {
-        public async Task<OmdbSearchResponse> SearchAsync(string title, int page = 1)
+        public async Task<OmdbSearchResponse> SearchAsync(string title, int page = 1, MediaType? type = null, string? year = null)
         {
             try
             {
-                var searchCache = await cacheService.GetSearchCacheAsync(title, page);
+                var searchCache = await cacheService.GetSearchCacheAsync(title, page, type, year);
                 if (searchCache != null)
                 {
                     logger.LogInformation("Search Cache HIT for {Query} page {Page}", title, page);
@@ -27,7 +27,7 @@ namespace OmdbTerminal.ApiService.Services
                 }
 
                 logger.LogInformation("Search Cache MISS for {Query} page {Page}. Fetching from OMDB...", title, page);
-                var response = await omdbClient.SearchMoviesAsync(title, page);
+                var response = await omdbClient.SearchMoviesAsync(title, page, type, year);
 
                 if (response.Response && response.Results != null)
                 {
@@ -37,6 +37,8 @@ namespace OmdbTerminal.ApiService.Services
                     {
                         Query = title,
                         Page = page,
+                        Type = type,
+                        Year = year,
                         TotalResults = response.TotalResults,
                         MovieIds = [.. response.Results.Select(r => r.ImdbId)],
                         CachedAt = DateTime.UtcNow
@@ -91,12 +93,22 @@ namespace OmdbTerminal.ApiService.Services
             }
         }
 
-        public async Task<MovieDetails?> GetDetailsByTitleAsync(string title)
+        public async Task<MovieDetails?> GetDetailsByTitleAsync(string title, MediaType? type = null, string? year = null)
         {
             try
             {
                 // MySQL is case-insensitive by default direct comparison works fine
-                var cached = await cacheService.GetQueryable().FirstOrDefaultAsync(m => m.Title == title);
+                var query = cacheService.GetQueryable().Where(m => m.Title == title);
+                if (type.HasValue)
+                {
+                    query = query.Where(m => m.Type == type.Value);
+                }
+                if (!string.IsNullOrWhiteSpace(year))
+                {
+                    query = query.Where(m => m.Year == year);
+                }
+
+                var cached = await query.FirstOrDefaultAsync();
                 if (cached != null && cached.IsDetailed)
                 {
                     logger.LogInformation("Cache HIT for detailed Title {Title}", title);
@@ -105,7 +117,7 @@ namespace OmdbTerminal.ApiService.Services
 
                 logger.LogInformation("Detail Cache MISS (or partial) for Title {Title} - Fetching from OMDB...", title);
 
-                var details = await omdbClient.GetMovieDetailsByTitleAsync(title);
+                var details = await omdbClient.GetMovieDetailsByTitleAsync(title, type, year);
 
                 if (!details.Response) return null;
 

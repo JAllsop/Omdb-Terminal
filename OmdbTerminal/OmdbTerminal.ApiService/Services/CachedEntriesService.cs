@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OmdbTerminal.ApiService.Data;
+using OmdbTerminal.Shared;
 
 namespace OmdbTerminal.ApiService.Services
 {
@@ -110,13 +111,13 @@ namespace OmdbTerminal.ApiService.Services
             }
         }
 
-        public async Task<SearchCacheEntity?> GetSearchCacheAsync(string query, int page)
+        public async Task<SearchCacheEntity?> GetSearchCacheAsync(string query, int page, MediaType? type, string? year)
         {
             try
             {
                 // MySQL is case-insensitive by default direct comparison works fine
                 return await dbContext.SearchCache
-                    .FirstOrDefaultAsync(s => s.Query == query && s.Page == page);
+                    .FirstOrDefaultAsync(s => s.Query == query && s.Page == page && s.Type == type && s.Year == year);
             }
             catch (Exception ex)
             {

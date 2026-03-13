@@ -4,13 +4,17 @@ namespace OmdbTerminal.Cli.Services
 {
     internal class ApiClient(MoviesHttpClient moviesClient, CachedEntriesHttpClient cachedEntriesClient) : IApiClient
     {
-        public async Task SearchAndDisplayAsync(string title)
+        public async Task SearchAndDisplayAsync(string title, MediaType? type = null, string? year = null)
         {
             try
             {
                 Console.WriteLine($"\n Searching OMDB for '{title}'...");
 
-                var response = await moviesClient.GetFromJsonAsync<OmdbSearchResponse>($"search?title={title}");
+                var url = $"search?title={Uri.EscapeDataString(title)}";
+                if (type.HasValue) url += $"&type={type.Value}";
+                if (!string.IsNullOrWhiteSpace(year)) url += $"&year={Uri.EscapeDataString(year)}";
+
+                var response = await moviesClient.GetFromJsonAsync<OmdbSearchResponse>(url);
 
                 if (response == null || !response.Response || response.Results == null)
                 {
@@ -49,6 +53,48 @@ namespace OmdbTerminal.Cli.Services
                 Console.WriteLine($"Rated: {response.Rated}");
                 Console.WriteLine($"Released: {response.Released}");
                 Console.WriteLine($"Runtime: {response.Runtime}");
+                Console.WriteLine($"Genre: {response.Genre}");
+                Console.WriteLine($"Director: {response.Director}");
+                Console.WriteLine($"Plot: {response.Plot}");
+                Console.WriteLine($"IMDB Rating: {response.ImdbRating}");
+                Console.WriteLine($"Poster URL: {response.PosterUrl}");
+                Console.WriteLine("--------------------------------------\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n Error communicating with API: {ex.Message}\n");
+            }
+        }
+
+        public async Task SearchByTitleAndDisplayAsync(string title, MediaType? type = null, string? year = null)
+        {
+            try
+            {
+                Console.WriteLine($"\n Fetching details for Title '{title}'...");
+
+                var url = $"detailsTitle/{Uri.EscapeDataString(title)}";
+                var queryParams = new List<string>();
+                if (type.HasValue) queryParams.Add($"type={type.Value}");
+                if (!string.IsNullOrWhiteSpace(year)) queryParams.Add($"year={Uri.EscapeDataString(year)}");
+
+                if (queryParams.Any())
+                {
+                    url += "?" + string.Join("&", queryParams);
+                }
+
+                var response = await moviesClient.GetFromJsonAsync<MovieDetails>(url);
+                if (response == null)
+                {
+                    Console.WriteLine("\n Movie not found or API error\n");
+                    return;
+                }
+
+                Console.WriteLine($"Title: {response.Title}");
+                Console.WriteLine($"Year: {response.Year}");
+                Console.WriteLine($"Rated: {response.Rated}");
+                Console.WriteLine($"Released: {response.Released}");
+                Console.WriteLine($"Runtime: {response.Runtime}");
+                Console.WriteLine($"Type: {response.Type}");
                 Console.WriteLine($"Genre: {response.Genre}");
                 Console.WriteLine($"Director: {response.Director}");
                 Console.WriteLine($"Plot: {response.Plot}");

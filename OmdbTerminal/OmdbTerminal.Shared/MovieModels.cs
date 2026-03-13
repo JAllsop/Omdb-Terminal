@@ -18,7 +18,8 @@ public class MovieSearchResult
     public string ImdbId { get; set; } = default!;
 
     [JsonPropertyName("Type")]
-    public string Type { get; set; } = default!;
+    [JsonConverter(typeof(StringToMediaTypeConverter))]
+    public MediaType? Type { get; set; }
 
     [JsonPropertyName("Poster")]
     public string PosterUrl { get; set; } = default!;
@@ -119,7 +120,8 @@ public class MovieDetails
     public string ImdbId { get; set; } = default!;
 
     [JsonPropertyName("Type")]
-    public string Type { get; set; } = "N/A";
+    [JsonConverter(typeof(StringToMediaTypeConverter))]
+    public MediaType? Type { get; set; }
 
     [JsonPropertyName("DVD")]
     public string DVD { get; set; } = "N/A";

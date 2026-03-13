@@ -11,11 +11,21 @@ public class OmdbClient(HttpClient httpClient, IConfiguration configuration, ILo
     private const string _detailsByIdUrlTemplate = "?apikey={0}&i={1}&plot=full";
     private const string _detailsByTitleUrlTemplate = "?apikey={0}&t={1}&plot=full";
 
-    public async Task<OmdbSearchResponse> SearchMoviesAsync(string title, int page = 1)
+    public async Task<OmdbSearchResponse> SearchMoviesAsync(string title, int page = 1, MediaType? type = null, string? year = null)
     {
         try
         {
             var url = string.Format(_searchUrlTemplate, _apiKey, Uri.EscapeDataString(title), page);
+
+            if (type.HasValue)
+            {
+                url += $"&type={type.Value.ToApiString()}";
+            }
+            if (!string.IsNullOrWhiteSpace(year))
+            {
+                url += $"&y={Uri.EscapeDataString(year)}";
+            }
+
             var response = await httpClient.GetFromJsonAsync<OmdbSearchResponse>(url);
 
             return response ?? new OmdbSearchResponse();
@@ -53,11 +63,21 @@ public class OmdbClient(HttpClient httpClient, IConfiguration configuration, ILo
         }
     }
 
-    public async Task<MovieDetails> GetMovieDetailsByTitleAsync(string title)
+    public async Task<MovieDetails> GetMovieDetailsByTitleAsync(string title, MediaType? type = null, string? year = null)
     {
         try
         {
             var url = string.Format(_detailsByTitleUrlTemplate, _apiKey, Uri.EscapeDataString(title));
+
+            if (type.HasValue)
+            {
+                url += $"&type={type.Value.ToApiString()}";
+            }
+            if (!string.IsNullOrWhiteSpace(year))
+            {
+                url += $"&y={Uri.EscapeDataString(year)}";
+            }
+
             var response = await httpClient.GetFromJsonAsync<MovieDetails>(url);
             return response ?? new MovieDetails();
         }

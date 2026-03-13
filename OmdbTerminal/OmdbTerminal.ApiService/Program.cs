@@ -40,6 +40,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    // Note applying migrations at startup can lead to issues in production environments, but for this use case, we can assume it's acceptable.
+    // In a real-world scenario, we would use a more robust migration strategy e.g. applying migrations as part of the deployment process, using a migration tool or modifying the migration script to be idempotent
     var db = scope.ServiceProvider.GetRequiredService<OmdbDbContext>();
     await db.Database.MigrateAsync();
 }

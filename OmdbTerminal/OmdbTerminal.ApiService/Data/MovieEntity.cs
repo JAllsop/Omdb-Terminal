@@ -44,7 +44,7 @@ namespace OmdbTerminal.ApiService.Data
 
         public string ImdbVotes { get; set; } = "N/A";
 
-        public string Type { get; set; } = "N/A";
+        public MediaType? Type { get; set; }
 
         public string DVD { get; set; } = "N/A";
 
