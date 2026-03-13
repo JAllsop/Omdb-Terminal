@@ -12,8 +12,8 @@ using OmdbTerminal.ApiService.Data;
 namespace OmdbTerminal.ApiService.Data.Migrations
 {
     [DbContext(typeof(OmdbDbContext))]
-    [Migration("20260313120820_ExpandedCaching-V2")]
-    partial class ExpandedCachingV2
+    [Migration("20260313151426_InitialMigration-V2")]
+    partial class InitialMigrationV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,7 +112,6 @@ namespace OmdbTerminal.ApiService.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Website")
@@ -151,11 +150,11 @@ namespace OmdbTerminal.ApiService.Data.Migrations
 
             modelBuilder.Entity("OmdbTerminal.ApiService.Data.SearchCacheEntity", b =>
                 {
-                    b.Property<string>("Query")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("Page")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CachedAt")
                         .HasColumnType("datetime(6)");
@@ -164,10 +163,26 @@ namespace OmdbTerminal.ApiService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Page")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Query")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("TotalResults")
                         .HasColumnType("int");
 
-                    b.HasKey("Query", "Page");
+                    b.Property<string>("Type")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Year")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Query", "Page", "Type", "Year")
+                        .IsUnique();
 
                     b.ToTable("SearchCache");
                 });
