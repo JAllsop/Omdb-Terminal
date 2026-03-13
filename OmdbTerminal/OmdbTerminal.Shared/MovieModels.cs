@@ -139,5 +139,7 @@ public class MovieDetails
     [JsonConverter(typeof(StringToBoolConverter))]
     public bool Response { get; set; } = false;
 
+    public bool IsDetailed { get; set; } = false;
+
     public bool IsCustom { get; set; } = false;
 }

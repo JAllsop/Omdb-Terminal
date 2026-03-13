@@ -84,7 +84,8 @@ namespace OmdbTerminal.ApiService.Data
                 BoxOffice = entity.BoxOffice,
                 Production = entity.Production,
                 Website = entity.Website,
-                Ratings = entity.Ratings.Select(r => new RatingDetail { Source = r.Source, Value = r.Value }).ToList(),
+                Ratings = [.. entity.Ratings.Select(r => new RatingDetail { Source = r.Source, Value = r.Value })],
+                IsDetailed = entity.IsDetailed,
                 IsCustom = entity.IsCustom
             };
     }

@@ -8,7 +8,13 @@ public class StringToMediaTypeConverter : JsonConverter<MediaType?>
 {
     public override MediaType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var value = reader.GetString();
+        string? value = reader.TokenType switch
+        {
+            JsonTokenType.Number => reader.GetInt32().ToString(),
+            JsonTokenType.String => reader.GetString(),
+            _ => null
+        };
+
         if (string.IsNullOrWhiteSpace(value) || value.Equals("N/A", StringComparison.OrdinalIgnoreCase))
             return null;
 
