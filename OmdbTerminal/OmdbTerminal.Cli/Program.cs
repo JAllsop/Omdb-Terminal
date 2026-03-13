@@ -37,12 +37,15 @@ class Program
                     var searchYear = Console.ReadLine();
                     Console.Write("Enter type (Movie/Series/Episode - optional): ");
                     var searchTypeStr = Console.ReadLine();
+                    Console.Write("Enter page (optional, default 1): ");
+                    var searchPageStr = Console.ReadLine();
+                    int searchPage = int.TryParse(searchPageStr, out var parsedPage) ? parsedPage : 1;
                     Enum.TryParse<OmdbTerminal.Shared.MediaType>(searchTypeStr, true, out var searchType);
 
                     if (!string.IsNullOrWhiteSpace(searchTitle))
                     {
                         var st = string.IsNullOrWhiteSpace(searchTypeStr) ? null : (OmdbTerminal.Shared.MediaType?)searchType;
-                        await apiClient.SearchAndDisplayAsync(searchTitle, st, searchYear);
+                        await apiClient.SearchAndDisplayAsync(searchTitle, searchPage, st, searchYear);
                     }
                     break;
                 case "2":
