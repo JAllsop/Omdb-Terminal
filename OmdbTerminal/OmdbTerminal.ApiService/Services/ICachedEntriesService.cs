@@ -1,4 +1,5 @@
 ﻿using OmdbTerminal.ApiService.Data;
+using OmdbTerminal.Shared;
 
 namespace OmdbTerminal.ApiService.Services
 {
@@ -16,7 +17,7 @@ namespace OmdbTerminal.ApiService.Services
 
         Task<bool> DeleteAsync(string id);
 
-        Task<SearchCacheEntity?> GetSearchCacheAsync(string query, int page);
+        Task<SearchCacheEntity?> GetSearchCacheAsync(string query, int page, MediaType? type, string? year);
 
         Task<bool> SaveSearchCacheAsync(SearchCacheEntity searchCache, IEnumerable<MovieEntity> moviesFromSearch);
 

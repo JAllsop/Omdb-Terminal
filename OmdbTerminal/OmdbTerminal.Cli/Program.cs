@@ -20,9 +20,10 @@ class Program
             Console.WriteLine("Select an option:");
             Console.WriteLine("1. Search OMDB");
             Console.WriteLine("2. Get movie details by IMDB ID (and cache result)");
-            Console.WriteLine("3. Clear cache");
-            Console.WriteLine("4. Manage Cached Entries (CRUD)");
-            Console.WriteLine("5. Quit");
+            Console.WriteLine("3. Get movie details by Title (and cache result)");
+            Console.WriteLine("4. Clear cache");
+            Console.WriteLine("5. Manage Cached Entries (CRUD)");
+            Console.WriteLine("6. Quit");
             Console.Write("\n> ");
 
             var input = Console.ReadLine();
@@ -30,11 +31,18 @@ class Program
             switch (input)
             {
                 case "1":
-                    Console.Write("Enter movie title: ");
-                    var title = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(title))
+                    Console.Write("Enter title: ");
+                    var searchTitle = Console.ReadLine();
+                    Console.Write("Enter year (optional): ");
+                    var searchYear = Console.ReadLine();
+                    Console.Write("Enter type (Movie/Series/Episode - optional): ");
+                    var searchTypeStr = Console.ReadLine();
+                    Enum.TryParse<OmdbTerminal.Shared.MediaType>(searchTypeStr, true, out var searchType);
+
+                    if (!string.IsNullOrWhiteSpace(searchTitle))
                     {
-                        await apiClient.SearchAndDisplayAsync(title);
+                        var st = string.IsNullOrWhiteSpace(searchTypeStr) ? null : (OmdbTerminal.Shared.MediaType?)searchType;
+                        await apiClient.SearchAndDisplayAsync(searchTitle, st, searchYear);
                     }
                     break;
                 case "2":
@@ -46,6 +54,21 @@ class Program
                     }
                     break;
                 case "3":
+                    Console.Write("Enter title: ");
+                    var detailTitle = Console.ReadLine();
+                    Console.Write("Enter year (optional): ");
+                    var detailYear = Console.ReadLine();
+                    Console.Write("Enter type (Movie/Series/Episode - optional): ");
+                    var detailTypeStr = Console.ReadLine();
+                    Enum.TryParse<OmdbTerminal.Shared.MediaType>(detailTypeStr, true, out var detailType);
+
+                    if (!string.IsNullOrWhiteSpace(detailTitle))
+                    {
+                        var dt = string.IsNullOrWhiteSpace(detailTypeStr) ? null : (OmdbTerminal.Shared.MediaType?)detailType;
+                        await apiClient.SearchByTitleAndDisplayAsync(detailTitle, dt, detailYear);
+                    }
+                    break;
+                case "4":
                     Console.Write("Are you sure you want to clear the cache? (y/n): ");
                     var confirm = Console.ReadLine();
                     if (confirm?.Trim().ToLower() == "y")
@@ -57,10 +80,10 @@ class Program
                         Console.WriteLine("Cache clear cancelled\n");
                     }
                     break;
-                case "4":
+                case "5":
                     await apiClient.ManageCustomEntitiesAsync();
                     break;
-                case "5":
+                case "6":
                 case "q":
                 case "quit":
                     isRunning = false;

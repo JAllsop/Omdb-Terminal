@@ -13,14 +13,14 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     /// Searches the external OMDB database for movies similar to the specified title and returns a paginated list of results
     /// </summary>
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string title, [FromQuery] int page = 1)
+    public async Task<IActionResult> Search([FromQuery] string title, [FromQuery] int page = 1, [FromQuery] MediaType? type = null, [FromQuery] string? year = null)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
             return BadRequest("Search title cannot be empty");
         }
 
-        var result = await movieService.SearchAsync(title, page);
+        var result = await movieService.SearchAsync(title, page, type, year);
         return Ok(result);
     }
 
@@ -50,13 +50,13 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     [HttpGet("detailsTitle/{title}")]
     [ProducesResponseType(typeof(MovieDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetDetailsByTitle(string title)
+    public async Task<IActionResult> GetDetailsByTitle(string title, [FromQuery] MediaType? type = null, [FromQuery] string? year = null)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
             return BadRequest("Search title cannot be empty");
         }
-        var movie = await movieService.GetDetailsByTitleAsync(title);
+        var movie = await movieService.GetDetailsByTitleAsync(title, type, year);
         return movie == null
             ? NotFound($"Movie with Title {title} not found.")
             : Ok(movie);
