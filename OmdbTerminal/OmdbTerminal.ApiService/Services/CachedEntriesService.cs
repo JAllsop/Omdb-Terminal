@@ -15,6 +15,13 @@ namespace OmdbTerminal.ApiService.Services
             return await dbContext.CachedMovies.FindAsync(id);
         }
 
+        public async Task<List<MovieEntity>> GetByIdsAsync(IEnumerable<string> ids)
+        {
+            return await dbContext.CachedMovies
+                .Where(m => ids.Contains(m.Id))
+                .ToListAsync();
+        }
+
         public async Task<bool> CreateAsync(MovieEntity movie)
         {
             var existingMovie = await dbContext.CachedMovies.FindAsync(movie.Id);
@@ -22,8 +29,9 @@ namespace OmdbTerminal.ApiService.Services
 
             movie.CachedAt = DateTime.UtcNow;
             dbContext.CachedMovies.Add(movie);
-            await dbContext.SaveChangesAsync();
+            var count = await dbContext.SaveChangesAsync();
 
+            if(count == 0) return false;
             return true;
         }
 
@@ -39,7 +47,9 @@ namespace OmdbTerminal.ApiService.Services
             existingMovie.Genre = updatedMovie.Genre;
             existingMovie.CachedAt = DateTime.UtcNow;
 
-            await dbContext.SaveChangesAsync();
+            var count = await dbContext.SaveChangesAsync();
+
+            if(count == 0) return false;
             return true;
         }
 
@@ -49,13 +59,41 @@ namespace OmdbTerminal.ApiService.Services
             if (movie == null) return false;
 
             dbContext.CachedMovies.Remove(movie);
-            await dbContext.SaveChangesAsync();
+            var count = await dbContext.SaveChangesAsync();
+
+            if(count == 0) return false;
+            return true;
+        }        
+
+        public async Task<SearchCacheEntity?> GetSearchCacheAsync(string query, int page)
+        {
+            // MySQL is case-insensitive by default direct comparison works fine
+            return await dbContext.SearchCache
+                .FirstOrDefaultAsync(s => s.Query == query && s.Page == page);
+        }
+
+        public async Task<bool> SaveSearchCacheAsync(SearchCacheEntity searchCache, IEnumerable<MovieEntity> moviesFromSearch)
+        {
+            foreach (var movie in moviesFromSearch)
+            {
+                var existing = await dbContext.CachedMovies.FindAsync(movie.Id);
+                if (existing == null)
+                {
+                    dbContext.CachedMovies.Add(movie);
+                }
+            }
+
+            dbContext.SearchCache.Add(searchCache);
+            var count = await dbContext.SaveChangesAsync();
+
+            if(count == 0) return false;
             return true;
         }
 
         public async Task<int> ClearCacheAsync()
         {
             var deletedCount = await dbContext.CachedMovies.ExecuteDeleteAsync();
+            deletedCount += await dbContext.SearchCache.ExecuteDeleteAsync();
             return deletedCount;
         }
     }

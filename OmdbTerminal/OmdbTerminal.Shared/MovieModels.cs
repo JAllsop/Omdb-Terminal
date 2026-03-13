@@ -33,7 +33,8 @@ public class OmdbSearchResponse
     public List<MovieSearchResult>? Results { get; set; }
 
     [JsonPropertyName("totalResults")]
-    public string? TotalResults { get; set; }
+    [JsonConverter(typeof(StringToIntConverter))]
+    public int TotalResults { get; set; } = 0;
 
     [JsonPropertyName("Response")]
     [JsonConverter(typeof(StringToBoolConverter))]
@@ -41,6 +42,18 @@ public class OmdbSearchResponse
 
     [JsonPropertyName("Error")]
     public string? Error { get; set; }
+}
+
+/// <summary>
+/// Represents a single rating from a specific source (e.g., Rotten Tomatoes, Metacritic)
+/// </summary>
+public class RatingDetail
+{
+    [JsonPropertyName("Source")]
+    public string Source { get; set; } = "N/A";
+
+    [JsonPropertyName("Value")]
+    public string Value { get; set; } = "N/A";
 }
 
 /// <summary>
@@ -55,31 +68,70 @@ public class MovieDetails
     public string Year { get; set; } = default!;
 
     [JsonPropertyName("Rated")]
-    public string? Rated { get; set; }
+    public string Rated { get; set; } = "N/A";
 
     [JsonPropertyName("Released")]
-    public string? Released { get; set; }
+    public string Released { get; set; } = "N/A";
 
     [JsonPropertyName("Runtime")]
-    public string? Runtime { get; set; }
+    public string Runtime { get; set; } = "N/A";
 
     [JsonPropertyName("Genre")]
-    public string? Genre { get; set; }
+    public string Genre { get; set; } = "N/A";
 
     [JsonPropertyName("Director")]
-    public string? Director { get; set; }
+    public string Director { get; set; } = "N/A";
+
+    [JsonPropertyName("Writer")]
+    public string Writer { get; set; } = "N/A";
+
+    [JsonPropertyName("Actors")]
+    public string Actors { get; set; } = "N/A";
 
     [JsonPropertyName("Plot")]
-    public string? Plot { get; set; }
+    public string Plot { get; set; } = "N/A";
+
+    [JsonPropertyName("Language")]
+    public string Language { get; set; } = "N/A";
+
+    [JsonPropertyName("Country")]
+    public string Country { get; set; } = "N/A";
+
+    [JsonPropertyName("Awards")]
+    public string Awards { get; set; } = "N/A";
+
+    [JsonPropertyName("Poster")]
+    public string PosterUrl { get; set; } = "N/A";
+
+    [JsonPropertyName("Ratings")]
+    public List<RatingDetail> Ratings { get; set; } = [];
+
+    [JsonPropertyName("Metascore")]
+    public string Metascore { get; set; } = "N/A";
+
+    [JsonPropertyName("imdbRating")]
+    public string ImdbRating { get; set; } = "N/A";
+
+    [JsonPropertyName("imdbVotes")]
+    public string ImdbVotes { get; set; } = "N/A";
 
     [JsonPropertyName("imdbID")]
     public string ImdbId { get; set; } = default!;
 
-    [JsonPropertyName("imdbRating")]
-    public string? ImdbRating { get; set; }
+    [JsonPropertyName("Type")]
+    public string Type { get; set; } = "N/A";
 
-    [JsonPropertyName("Poster")]
-    public string? PosterUrl { get; set; }
+    [JsonPropertyName("DVD")]
+    public string DVD { get; set; } = "N/A";
+
+    [JsonPropertyName("BoxOffice")]
+    public string BoxOffice { get; set; } = "N/A";
+
+    [JsonPropertyName("Production")]
+    public string Production { get; set; } = "N/A";
+
+    [JsonPropertyName("Website")]
+    public string Website { get; set; } = "N/A";
 
     [JsonPropertyName("Response")]
     [JsonConverter(typeof(StringToBoolConverter))]
