@@ -4,13 +4,13 @@ namespace OmdbTerminal.Cli.Services
 {
     internal class ApiClient(MoviesHttpClient moviesClient, CachedEntriesHttpClient cachedEntriesClient) : IApiClient
     {
-        public async Task SearchAndDisplayAsync(string title, MediaType? type = null, string? year = null)
+        public async Task SearchAndDisplayAsync(string title, int page = 1, MediaType? type = null, string? year = null)
         {
             try
             {
-                Console.WriteLine($"\n Searching OMDB for '{title}'...");
+                Console.WriteLine($"\n Searching OMDB for '{title}' (Page {page})...");
 
-                var url = $"search?title={Uri.EscapeDataString(title)}";
+                var url = $"search?title={Uri.EscapeDataString(title)}&page={page}";
                 if (type.HasValue) url += $"&type={type.Value}";
                 if (!string.IsNullOrWhiteSpace(year)) url += $"&year={Uri.EscapeDataString(year)}";
 
@@ -41,7 +41,7 @@ namespace OmdbTerminal.Cli.Services
             {
                 Console.WriteLine($"\n Fetching details for IMDB ID '{id}'...");
 
-                var response = await moviesClient.GetFromJsonAsync<MovieDetails>($"details/{id}");
+                var response = await moviesClient.GetFromJsonAsync<MovieDetails>($"detailsId/{id}");
                 if (response == null)
                 {
                     Console.WriteLine("\n Movie not found or API error\n");
@@ -295,35 +295,83 @@ namespace OmdbTerminal.Cli.Services
 
         private async Task SearchCachedEntitiesAsync()
         {
-            try
+            var isODataRunning = true;
+            while(isODataRunning)
             {
-                Console.WriteLine("\n--- Search Cached Movies (OData) ---");
-                Console.WriteLine("Example queries:");
-                Console.WriteLine("  ?$filter=contains(Title, 'Star')");
-                Console.WriteLine("  ?$orderby=Year desc");
-                Console.WriteLine("  ?$top=5");
-                Console.Write("\nEnter OData query (press Enter for all): ");
+                Console.WriteLine("\n--- Advanced Cached Movies Search (OData) ---");
+                Console.WriteLine("1. Get All Cached Movies");
+                Console.WriteLine("2. Search Title (contains)");
+                Console.WriteLine("3. Filter by exact Year");
+                Console.WriteLine("4. Sort (OrderBy Title or Year)");
+                Console.WriteLine("5. Pagination (Top / Skip)");
+                Console.WriteLine("6. Custom Raw OData Query");
+                Console.WriteLine("7. Back");
+                Console.Write("\n> ");
 
-                var query = Console.ReadLine() ?? "";
-                if (!string.IsNullOrWhiteSpace(query) && !query.StartsWith('?'))
+                var input = Console.ReadLine();
+                var query = "";
+
+                switch (input)
                 {
-                    query = "?" + query;
+                    case "1":
+                        break;
+                    case "2":
+                        Console.Write("Enter text to search in Title: ");
+                        var text = Console.ReadLine() ?? "";
+                        if (!string.IsNullOrWhiteSpace(text)) query = $"?$filter=contains(tolower(Title), '{text.ToLower()}')";
+                        break;
+                    case "3":
+                        Console.Write("Enter exact Year: ");
+                        var year = Console.ReadLine() ?? "";
+                        if (!string.IsNullOrWhiteSpace(year)) query = $"?$filter=Year eq '{year}'";
+                        break;
+                    case "4":
+                        Console.Write("Order by (1 = Title, 2 = Year, default = Title): ");
+                        var sortField = Console.ReadLine() == "2" ? "Year" : "Title";
+                        Console.Write("Direction (1 = Ascending, 2 = Descending, default = Asc): ");
+                        var sortDir = Console.ReadLine() == "2" ? "desc" : "asc";
+                        query = $"?$orderby={sortField} {sortDir}";
+                        break;
+                    case "5":
+                        Console.Write("Top (e.g. 5, default 10): ");
+                        var topStr = Console.ReadLine();
+                        var top = string.IsNullOrWhiteSpace(topStr) ? 10 : int.Parse(topStr);
+                        Console.Write("Skip (e.g. 0, default 0): ");
+                        var skipStr = Console.ReadLine();
+                        var skip = string.IsNullOrWhiteSpace(skipStr) ? 0 : int.Parse(skipStr);
+                        query = $"?$top={top}&$skip={skip}";
+                        break;
+                    case "6":
+                        Console.Write("Enter raw OData query (e.g. ?$filter=contains(Title, 'Star')): ");
+                        query = Console.ReadLine() ?? "";
+                        if (!string.IsNullOrWhiteSpace(query) && !query.StartsWith('?')) query = "?" + query;
+                        break;
+                    case "7":
+                        isODataRunning = false;
+                        continue;
+                    default:
+                        Console.WriteLine("\nInvalid option\n");
+                        continue;
                 }
 
-                var res = await cachedEntriesClient.GetAsync(query);
-                if (!res.IsSuccessStatusCode)
+                try
                 {
-                    var msg = await res.Content.ReadAsStringAsync();
-                    Console.WriteLine($"\n Failed to search movies: {msg}\n");
-                    return;
-                }
+                    Console.WriteLine($"\n Executing query: GET /CachedEntries{query}");
+                    var res = await cachedEntriesClient.GetAsync(query);
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        var msg = await res.Content.ReadAsStringAsync();
+                        Console.WriteLine($"\n Failed to search movies: {msg}\n");
+                        continue;
+                    }
 
-                var json = await res.Content.ReadAsStringAsync();
-                Console.WriteLine($"\n Search Results: \n {json}\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"\n Error communicating with API: {ex.Message}\n");
+                    var json = await res.Content.ReadAsStringAsync();
+                    Console.WriteLine($"\n Search Results: \n {json}\n");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n Error communicating with API: {ex.Message}\n");
+                }
             }
         }
     }

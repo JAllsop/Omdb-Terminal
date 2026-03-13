@@ -7,7 +7,7 @@ namespace OmdbTerminal.Cli.Services
 {
     internal interface IApiClient
     {
-        Task SearchAndDisplayAsync(string title, MediaType? type = null, string? year = null);
+        Task SearchAndDisplayAsync(string title, int page = 1, MediaType? type = null, string? year = null);
 
         Task SearchByImdbIdAndDisplayAsync(string id);
 

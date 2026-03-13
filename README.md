@@ -69,15 +69,14 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 *Searching for movies by title*
 
-<img src="Screenshots/V1/CLI_Search.png" alt="CLI Search Example" width="750" />
+<img src="Screenshots/V1.1/CLI_Search.png" alt="CLI Search Example" width="750" />
 
 *Fetching and caching detailed movie data by IMDb ID*
 
-<img src="Screenshots/V1/CLI_Lookup.png" alt="CLI Lookup Example" width="750" />
-
+<img src="Screenshots/V1.1/CLI_Lookup.png" alt="CLI Lookup Example" width="750" />
 *Manually creating a cached entry via the CLI*
 
-<img src="Screenshots/V1/CLI_Create.png" alt="CLI Create Example" width="750" />
+<img src="Screenshots/V1.1/CLI_Create.png" alt="CLI Create Example" width="750" />
 
 ### .NET Aspire Infrastructure
 
@@ -95,11 +94,9 @@ https://github.com/user-attachments/assets/53edacd8-fb5f-4208-97d6-a5a10ba4d57e
 
 ## Planned Improvements (V2)
 
-While V1 establishes a rock-solid backend foundation and MVP loop, V2 will focus on significantly enhancing the user interface and expanding the application's intelligence.
+While V1.1 establishes a rock-solid backend foundation and MVP loop, V2 will focus on significantly enhancing the user interface and expanding the application's intelligence.
 
 - **Graphical Terminal UI:** Transition from a basic `while` loop to a proper GUI using `Terminal.Gui` (gui.cs), featuring interactive lists, input fields, and dialog boxes
-- **Expanded Caching Capabilities:** Implement caching for broader search results (e.g., caching the list of movies returned when searching for a keyword), rather than just caching the exact movie details
-- **Intuitive OData CLI Integration:** Abstract the OData query string syntax within the CLI, allowing users to build complex filters via menus rather than typing raw `?$filter=contains(Title, 'Star')` query strings manually
 - **Improved Logging:** More granular and structured logging via OpenTelemetry for deeper insights into cache hit/miss ratios and pipeline execution
 - **Improved Error Handling:** Implement more robust error handling and user feedback in the CLI, especially around API failures, database issues, and invalid inputs
 
