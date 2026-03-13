@@ -176,7 +176,7 @@ namespace OmdbTerminal.Cli.Services
             try
             {
                 Console.WriteLine("\n--- Create Custom Movie ---");
-                var id = Guid.NewGuid().ToString();
+                var id = $"CUSTOM-{Guid.NewGuid()}";
                 Console.WriteLine($"Generated ID: {id}");
 
                 Console.Write("Enter Title: ");
