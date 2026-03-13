@@ -18,9 +18,29 @@
 
 </div>
 
-OMDB Terminal is a .NET-based CLI application and REST API designed to interact with the [Open Movie Database (OMDb) API](https://www.omdbapi.com/). Built with a focus on modern .NET architecture (.NET 10), performance, and developer experience. It serves as a proxy for movie data, has intelligent caching and OData search capabilities.
+OMDB Terminal is a .NET-based CLI application and REST API designed to interact with the [Open Movie Database (OMDb) API](https://www.omdbapi.com/). Built with a focus on modern .NET architecture (.NET 10), performance, and developer experience. It serves as a proxy for movie data, has intelligent caching and OData search capabilities
 
-The project is orchestrated using .NET Aspire, which handles containerization, telemetry, and infrastructure management, allowing developers to focus on building features without worrying about setup or configuration.
+The project is orchestrated using .NET Aspire, which handles containerization, telemetry, and infrastructure management, allowing developers to focus on building features without worrying about setup or configuration
+
+## Table of Contents
+
+- [Features](#features)
+   - [Core Capabilities](#core-capabilities)
+   - [Architecture \& Infrastructure](#architecture--infrastructure)
+   - [Developer Experience](#developer-experience)
+- [Media Showcase](#media-showcase)
+   - [Terminal CLI](#terminal-cli)
+   - [.NET Aspire Infrastructure](#net-aspire-infrastructure)
+   - [Demo Video](#demo-video)
+- [Planned Improvements (V2)](#planned-improvements-v2)
+- [Getting Started](#getting-started)
+   - [Prerequisites](#prerequisites)
+   - [Running the Project](#running-the-project)
+   - [1. Clone the Repository](#1-clone-the-repository)
+   - [2. Start the Backend Infrastructure](#2-start-the-backend-infrastructure)
+   - [3. Run the CLI](#3-run-the-cli)
+   - [Pre-Compiled CLI Binaries](#pre-compiled-cli-binaries)
+
 
 ## Features
 
@@ -43,11 +63,9 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 - **Swagger Integration:** Full OpenAPI documentation with a custom Swagger filter (`ODataOperationFilter`) to natively support OData parameter inputs within the Swagger UI
 - **OpenTelemetry Dashboard:** Real-time visibility into database queries, HTTP requests, and application logs via the .NET Aspire Dashboard
 
----
+## Media Showcase
 
-## Media & Screenshots
-
-### Terminal CLI Action
+### Terminal CLI
 
 *Searching for movies by title*
 
@@ -71,7 +89,7 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 <img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="750" />
 
-### 🎥 Demo Video
+### Demo Video
 
 https://github.com/user-attachments/assets/53edacd8-fb5f-4208-97d6-a5a10ba4d57e
 
@@ -88,16 +106,59 @@ While V1 establishes a rock-solid backend foundation and MVP loop, V2 will focus
 ## Getting Started
 
 ### Prerequisites
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) (or the specific version configured in the project)
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (required for .NET Aspire to spin up MySQL)
-- An OMDb API Key
+- Git
+
+> *Note: For ease of testing and review, this repository is pre-configured with a demo OMDb API key — you do not need to generate or configure your own to run the project. **In a Real World Environment, this would not be the case!***
 
 ### Running the Project
 
-1. Clone the repository.
-2. Set your OMDb API key in the `OmdbTerminal.ApiService` user secrets or `appsettings.json`.
-3. Open a terminal in the `OmdbTerminal.AppHost` directory.
-4. Run the orchestrator:
-   ```bash
-   dotnet run --configuration Release
-   ```
+> **Architecture Note:** <br/>
+.NET Aspire is a cloud-native orchestrator - it is designed to be deployed to cloud environments not run as a standalon desktop app <br/>
+Because of this, **you cannot simply run the standalone CLI executable without first spinning up the backend locally** <br/>
+The .NET SDK handles automatically provisioning the MySQL Docker containers and injecting the dynamic connection strings into the API proxy
+
+#### 1. Clone the Repository
+
+Open your terminal and clone the repository to your local machine:
+
+```bash
+git clone https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop.git
+cd Omdb-Terminal-CarTrack-JAllsop
+```
+
+#### 2. Start the Backend Infrastructure
+
+Open a terminal in the root of the repository and run the setup script for your operating system
+
+- **Windows**
+  ``` Powershell
+  .\start-backend-windows.ps1
+  ```
+
+- **Mac/Linux**
+  ``` bash
+  .\start-backend-windows.ps1
+  ```
+
+The scripts do the following:
+
+- Check for and initalise .NET User Secrets
+- Save the API key to .NET User Secrets - the included or user provided one
+- Spin up the Aspire orchestrator (API & MySQL Database)
+
+#### 3. Run the CLI
+
+Leave the backend terminal running. Open a new terminal window, navigate to the CLI project, and run it:
+``` Bash
+cd OmdbTerminal/OmdbTerminal.Cli
+dotnet run
+```
+
+#### Pre-Compiled CLI Binaries
+
+If you prefer not to compile the frontend yourself using dotnet run, you can download the standalone CLI executable (available for Windows, macOS, and Linux) directly from the Releases tab
+
+>**Important:** You must still complete steps 1 & 2 above to run the Aspire backend infrastructure locally so the pre-compiled CLI has an API to connect to
