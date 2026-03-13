@@ -5,7 +5,7 @@ using OmdbTerminal.Shared;
 
 namespace OmdbTerminal.Cli.Services
 {
-    internal interface IApiClient
+    internal interface IApiClientLegacy
     {
         Task SearchAndDisplayAsync(string title, int page = 1, MediaType? type = null, string? year = null);
 

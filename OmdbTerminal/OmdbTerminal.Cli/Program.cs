@@ -12,7 +12,7 @@ class Program
         Console.WriteLine("=================================================");
         Console.ResetColor();
 
-        var apiClient = IoC.Container.GetInstance<IApiClient>();
+        var apiClient = IoC.Container.GetInstance<IApiClientLegacy>();
         var isRunning = true;
 
         while (isRunning)

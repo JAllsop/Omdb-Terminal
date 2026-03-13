@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 namespace OmdbTerminal.Cli.Services
 {
-    internal class ApiClient(MoviesHttpClient moviesClient, CachedEntriesHttpClient cachedEntriesClient) : IApiClient
+    internal class ApiClientLegacy(MoviesHttpClient moviesClient, CachedEntriesHttpClient cachedEntriesClient) : IApiClientLegacy
     {
         public async Task SearchAndDisplayAsync(string title, int page = 1, MediaType? type = null, string? year = null)
         {

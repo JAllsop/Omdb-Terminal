@@ -14,7 +14,7 @@ namespace OmdbTerminal.Cli
             Container.RegisterSingleton(() => new CachedEntriesHttpClient());
             Container.RegisterSingleton(() => new MoviesHttpClient());
 
-            Container.Register<IApiClient, ApiClient>();
+            Container.Register<IApiClientLegacy, ApiClientLegacy>();
             Container.Verify();
         }
     }
