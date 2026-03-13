@@ -90,7 +90,7 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 ### Demo Video
 
-https://github.com/user-attachments/assets/53edacd8-fb5f-4208-97d6-a5a10ba4d57e
+https://github.com/user-attachments/assets/1d861ac8-a691-4f4d-91fa-9ea94d7da871
 
 ## Planned Improvements (V2)
 
