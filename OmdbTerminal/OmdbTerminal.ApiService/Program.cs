@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using OmdbTerminal.ApiService.Data;
 using OmdbTerminal.ApiService.Services;
+using OmdbTerminal.ApiService.Middleware;
 using OmdbTerminal.ApiService.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,9 @@ builder.AddMySqlDbContext<OmdbDbContext>("OmdbCacheDb");
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICachedEntriesService, CachedEntriesService>();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -41,6 +45,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapDefaultEndpoints();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
