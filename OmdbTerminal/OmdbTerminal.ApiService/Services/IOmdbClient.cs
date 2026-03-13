@@ -6,6 +6,8 @@ namespace OmdbTerminal.ApiService.Services
     {
         Task<OmdbSearchResponse> SearchMoviesAsync(string title, int page = 1);
 
-        Task<MovieDetails> GetMovieDetailsAsync(string imdbId);
+        Task<MovieDetails> GetMovieDetailsByIdAsync(string imdbId);
+
+        Task<MovieDetails> GetMovieDetailsByTitleAsync(string title);
     }
 }

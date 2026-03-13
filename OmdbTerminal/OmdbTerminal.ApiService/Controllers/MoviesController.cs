@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using OmdbTerminal.ApiService.Services;
 using OmdbTerminal.Shared;
 
@@ -9,7 +10,7 @@ namespace OmdbTerminal.ApiService.Controllers;
 public class MoviesController(IMovieService movieService) : ControllerBase
 {
     /// <summary>
-    /// Searches the external OMDB database for movies matching a title
+    /// Searches the external OMDB database for movies similar to the specified title and returns a paginated list of results
     /// </summary>
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string title, [FromQuery] int page = 1)
@@ -26,20 +27,38 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     /// <summary>
     /// Fetches the full details of a specific movie by its IMDB ID
     /// </summary>
-    [HttpGet("details/{id}")]
+    [HttpGet("detailsId/{id}")]
     [ProducesResponseType(typeof(MovieDetails), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetDetails(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            return BadRequest("Search title cannot be empty");
+            return BadRequest("Search ID cannot be empty");
         }
 
-        var movie = await movieService.GetDetailsAsync(id);
+        var movie = await movieService.GetDetailsByIdAsync(id);
 
         return movie == null
             ? NotFound($"Movie with ID {id} not found.")
+            : Ok(movie);
+    }
+
+    /// <summary>
+    /// Fetches the full details of a specific movie by its Title
+    /// </summary>
+    [HttpGet("detailsTitle/{title}")]
+    [ProducesResponseType(typeof(MovieDetails), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetDetailsByTitle(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return BadRequest("Search title cannot be empty");
+        }
+        var movie = await movieService.GetDetailsByTitleAsync(title);
+        return movie == null
+            ? NotFound($"Movie with Title {title} not found.")
             : Ok(movie);
     }
 }
