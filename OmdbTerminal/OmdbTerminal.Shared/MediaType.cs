@@ -24,6 +24,12 @@ public static class MediaTypeExtensions
     {
         if (string.IsNullOrWhiteSpace(type)) return null;
 
+        if (int.TryParse(type, out int numericType))
+        {
+            if (Enum.IsDefined(typeof(MediaType), numericType))
+                return (MediaType)numericType;
+        }
+
         return type.ToLowerInvariant() switch
         {
             "movie" => MediaType.Movie,

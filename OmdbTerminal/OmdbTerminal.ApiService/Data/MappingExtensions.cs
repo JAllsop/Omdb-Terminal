@@ -33,7 +33,8 @@ namespace OmdbTerminal.ApiService.Data
                 Website = details.Website,
                 Ratings = details.Ratings.Select(r => new RatingsEntity { MovieId = details.ImdbId, Source = r.Source, Value = r.Value }).ToList(),
                 CachedAt = DateTime.UtcNow,
-                IsDetailed = true
+                IsDetailed = true,
+                IsCustom = details.IsCustom
             };
 
         public static MovieEntity ToEntity(this MovieSearchResult searchResult)
