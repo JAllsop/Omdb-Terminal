@@ -52,6 +52,11 @@ namespace OmdbTerminal.ApiService.Services
 
                 return count > 0;
             }
+            catch (DbUpdateException ex)
+            {
+                logger.LogWarning(ex, "Race condition: Movie {Id} was already cached by another request", movie.Id);
+                return false;
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error creating cached movie: {Id}", movie.Id);
@@ -143,6 +148,11 @@ namespace OmdbTerminal.ApiService.Services
                 var count = await dbContext.SaveChangesAsync();
 
                 return count > 0;
+            }
+            catch (DbUpdateException ex)
+            {
+                logger.LogWarning(ex, "Race condition: Search cache or movies for query {Query} were already saved by another request", searchCache.Query);
+                return false;
             }
             catch (Exception ex)
             {
