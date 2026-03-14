@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 621 686" width="621" height="686" style="--bg:#1a1b26;--fg:#a9b1d6;--accent:#7aa2f7;--surface:#24283b;--border:#414868;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  .mono { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+</defs>
+<polyline class="er-relationship" data-entity1="MovieEntity" data-entity2="RatingsEntity" data-cardinality1="one" data-cardinality2="zero-many" data-identifying="true" data-label="has many" points="193.39999999999998,343 427.59999999999997,343" fill="none" stroke="var(--_line)" stroke-width="1" />
+<g class="entity" data-id="MovieEntity" data-label="MovieEntity">
+  <rect x="40" y="40" width="153.39999999999998" height="606" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="40" width="153.39999999999998" height="34" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="116.69999999999999" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="var(--_text)" dy="4.55">MovieEntity</text>
+  <line x1="40" y1="74" x2="193.39999999999998" y2="74" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <g><title>Primary Key (IMDb ID or Custom)</title>
+  <rect x="46" y="78" width="22.31" height="14" rx="2" ry="2" fill="var(--_key-badge)" />
+  <text x="57.155" y="85" text-anchor="middle" dy="0.35em" font-size="9" font-weight="600" fill="var(--_text-sec)">PK</text>
+  <text x="76.31" y="85" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="85" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Id</tspan></text>
+  </g>
+  <text x="48" y="107" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="107" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Title</tspan></text>
+  <text x="48" y="129" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="129" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Year</tspan></text>
+  <text x="48" y="151" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="151" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Rated</tspan></text>
+  <text x="48" y="173" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="173" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Released</tspan></text>
+  <text x="48" y="195" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="195" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Runtime</tspan></text>
+  <text x="48" y="217" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="217" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Genre</tspan></text>
+  <text x="48" y="239" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="239" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Director</tspan></text>
+  <text x="48" y="261" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="261" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Writer</tspan></text>
+  <text x="48" y="283" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="283" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Actors</tspan></text>
+  <text x="48" y="305" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="305" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Plot</tspan></text>
+  <text x="48" y="327" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="327" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Language</tspan></text>
+  <text x="48" y="349" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="349" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Country</tspan></text>
+  <text x="48" y="371" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="371" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Awards</tspan></text>
+  <text x="48" y="393" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="393" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">PosterUrl</tspan></text>
+  <text x="48" y="415" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="415" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Metascore</tspan></text>
+  <text x="48" y="437" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="437" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">ImdbRating</tspan></text>
+  <text x="48" y="459" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="459" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">ImdbVotes</tspan></text>
+  <g><title>MediaType Enum</title>
+  <text x="48" y="481" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">int</tspan></text>
+  <text x="185.39999999999998" y="481" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Type</tspan></text>
+  </g>
+  <text x="48" y="503" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="503" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">DVD</tspan></text>
+  <text x="48" y="525" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="525" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">BoxOffice</tspan></text>
+  <text x="48" y="547" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="547" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Production</tspan></text>
+  <text x="48" y="569" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="185.39999999999998" y="569" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Website</tspan></text>
+  <g><title>Default: false</title>
+  <text x="48" y="591" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">boolean</tspan></text>
+  <text x="185.39999999999998" y="591" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">IsCustom</tspan></text>
+  </g>
+  <g><title>Default: false</title>
+  <text x="48" y="613" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">boolean</tspan></text>
+  <text x="185.39999999999998" y="613" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">IsDetailed</tspan></text>
+  </g>
+  <g><title>Default: DateTime.UtcNow</title>
+  <text x="48" y="635" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">datetime</tspan></text>
+  <text x="185.39999999999998" y="635" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">CachedAt</tspan></text>
+  </g>
+</g>
+<g class="entity" data-id="RatingsEntity" data-label="RatingsEntity">
+  <rect x="427.59999999999997" y="293" width="153.39999999999998" height="100" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="427.59999999999997" y="293" width="153.39999999999998" height="34" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="504.29999999999995" y="310" text-anchor="middle" font-size="13" font-weight="700" fill="var(--_text)" dy="4.55">RatingsEntity</text>
+  <line x1="427.59999999999997" y1="327" x2="581" y2="327" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <g><title>Foreign Key to MovieEntity</title>
+  <rect x="433.59999999999997" y="331" width="22.31" height="14" rx="2" ry="2" fill="var(--_key-badge)" />
+  <text x="444.75499999999994" y="338" text-anchor="middle" dy="0.35em" font-size="9" font-weight="600" fill="var(--_text-sec)">FK</text>
+  <text x="463.90999999999997" y="338" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="573" y="338" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">MovieId</tspan></text>
+  </g>
+  <g><title>Part of Composite Primary Key</title>
+  <rect x="433.59999999999997" y="353" width="22.31" height="14" rx="2" ry="2" fill="var(--_key-badge)" />
+  <text x="444.75499999999994" y="360" text-anchor="middle" dy="0.35em" font-size="9" font-weight="600" fill="var(--_text-sec)">PK</text>
+  <text x="463.90999999999997" y="360" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="573" y="360" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Source</tspan></text>
+  </g>
+  <text x="435.59999999999997" y="382" class="mono" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-muted)">string</tspan></text>
+  <text x="573" y="382" class="mono" text-anchor="end" dy="0.35em" font-size="11" font-weight="400"><tspan fill="var(--_text-sec)">Value</tspan></text>
+</g>
+<line x1="197.39999999999998" y1="337" x2="197.39999999999998" y2="349" stroke="var(--_line)" stroke-width="1.25" />
+<line x1="201.39999999999998" y1="337" x2="201.39999999999998" y2="349" stroke="var(--_line)" stroke-width="1.25" />
+<line x1="423.59999999999997" y1="350" x2="411.59999999999997" y2="343" stroke="var(--_line)" stroke-width="1.25" />
+<line x1="423.59999999999997" y1="343" x2="411.59999999999997" y2="343" stroke="var(--_line)" stroke-width="1.25" />
+<line x1="423.59999999999997" y1="336" x2="411.59999999999997" y2="343" stroke="var(--_line)" stroke-width="1.25" />
+<circle cx="407.59999999999997" cy="343" r="4" fill="var(--bg)" stroke="var(--_line)" stroke-width="1.25" />
+<rect x="283.4" y="332.85" width="54.2" height="20.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="0.5" />
+<text x="310.5" y="343" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">has many</text>
+</svg>
