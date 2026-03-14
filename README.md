@@ -14,7 +14,8 @@
 
 <div align="center">
 
-   [![Build and Release CLI](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml/badge.svg)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml)
+[![Build and Release CLI](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml/badge.svg)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml)
+[![GitHub issues](https://img.shields.io/github/issues/JAllsop/Omdb-Terminal-CarTrack-JAllsop)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/issues)
 
 </div>
 
@@ -27,11 +28,15 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 - [Features](#features)
    - [Core Capabilities](#core-capabilities)
    - [Architecture \& Infrastructure](#architecture--infrastructure)
+      - [Database Schema](#database-schema)
    - [Developer Experience](#developer-experience)
 - [Media Showcase](#media-showcase)
-   - [Terminal CLI](#terminal-cli)
    - [.NET Aspire Infrastructure](#net-aspire-infrastructure)
-   - [Demo Video](#demo-video)
+   - [Terminal CLI (V2)](#terminal-cli-v2)
+   - [V2 Demo Video](#v2-demo-video)
+   - [Terminal CLI (V1.1)](#terminal-cli-v11)
+   - [V1.1 Demo Video](#v11-demo-video)
+- [Technical Considerations \& Known Limitations](#technical-considerations--known-limitations)
 - [Planned Improvements (V2)](#planned-improvements-v2)
 - [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
@@ -53,10 +58,27 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 ### Architecture & Infrastructure
 
+<div align="center">
+  <img src="Assets/Architecture_Diagram.svg" alt="Architecture Diagram" width="100%" />
+</div>
+
+- **Frontend (Terminal CLI):** A standalone .NET console application - interacts with users and communicates with the backend via HTTP/OData
+- **Backend (REST API):** A ASP.NET Core API providing endpoints for searching, fetching, and managing OMDB movie data
 - **.NET Aspire Orchestration:** The entire solution (API, MySQL Database, and Telemetry) is managed by .NET Aspire, ensuring a one-click local setup with automatic container provisioning and connection string injection
 - **Entity Framework Core:** Leverages [EF Core](https://www.nuget.org/packages/microsoft.entityframeworkcore) with [Pomelo MySQL](https://www.nuget.org/packages/Pomelo.EntityFrameworkCore.MySql/) for automated design-time migrations and data operations
 - **Service-Oriented Architecture:** Strict separation of concerns, keeping Controllers thin by delegating business logic and database interactions to dedicated services (`IMovieService`, `ICachedEntriesService`)
 - **Dependency Injection:** Utilizes a static `SimpleInjector` container within the CLI for dependency resolution
+
+#### Database Schema
+
+The database relies on Entity Framework Core to manage relations between cached movies and their associated ratings
+
+<div align="center">
+  <img src="Assets/Database_Schema.svg" alt="Database Schema" width="60%" />
+</div>
+
+- **MovieEntity:** Stores comprehensive movie metadata (Title, Year, Plot, Poster, etc.) and tracks cache status (`IsDetailed`, `IsCustom`)
+- **RatingsEntity:** Relies on a one-to-many relationship linking a movie to various rating sources (e.g., Internet Movie Database, Rotten Tomatoes, Metacritic)
 
 ### Developer Experience
 
@@ -65,32 +87,82 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
 
 ## Media Showcase
 
-### Terminal CLI
-
-*Searching for movies by title*
-
-<img src="Screenshots/V1.1/CLI_Search.png" alt="CLI Search Example" width="750" />
-
-*Fetching and caching detailed movie data by IMDb ID*
-
-<img src="Screenshots/V1.1/CLI_Lookup.png" alt="CLI Lookup Example" width="750" />
-*Manually creating a cached entry via the CLI*
-
-<img src="Screenshots/V1.1/CLI_Create.png" alt="CLI Create Example" width="750" />
-
 ### .NET Aspire Infrastructure
 
-*The .NET Aspire Dashboard showing live telemetry, traces, and connected resources*
+<table width="100%">
+  <tr>
+    <td width="50%" align="center"><em>.NET Aspire Dashboard</em></td>
+    <td width="50%" align="center"><em>.NET Aspire Startup Logs</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/Aspire_Dashboard.png" alt="Aspire Dashboard" width="100%" /></td>
+    <td><img src="Assets/Aspire_Console.png" alt="Aspire Console Logs" width="100%" /></td>
+  </tr>
+</table>
 
-<img src="Screenshots/Aspire_Dashboard.png" alt="Aspire Dashboard" width="750" />
+### Terminal CLI (V2)
 
-*Startup logs demonstrating automatic MySQL container provisioning and EF Core migration execution*
+<table width="100%">
+  <tr>
+    <td width="50%" align="center"><em>CLI Startup</em></td>
+    <td width="50%" align="center"><em>Searching for Movies by Title</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/V2/CLI_Startup.png" alt="CLI Startup Example" width="100%" /></td>
+    <td><img src="Assets/V2/CLI_Search.png" alt="CLI Search Example" width="100%" /></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Opening a Searched Movie</em></td>
+    <td align="center"><em>Viewing Cached Entries</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/V2/CLI_Search_Open.png" alt="CLI Search Open Example" width="100%" /></td>
+    <td><img src="Assets/V2/CLI_Cached.png" alt="CLI Cached Example" width="100%" /></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Opening a Cached Entry</em></td>
+    <td align="center"><em>Custom Cache Query</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/V2/CLI_Cached_Open.png" alt="CLI Cached Open Example" width="100%" /></td>
+    <td><img src="Assets/V2/CLI_Custom.png" alt="CLI Custom Example" width="100%" /></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Custom Entry View</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/V2/CLI_Custom_Open.png" alt="CLI Custom Open Example" width="100%" /></td>
+  </tr>
+</table>
 
-<img src="Screenshots/Aspire_Console.png" alt="Aspire Console Logs" width="750" />
+### V2 Demo Video
 
-### Demo Video
+*[Space for V2 Demo Video]*
+
+### Terminal CLI (V1.1)
+
+<table width="100%">
+  <tr>
+    <td width="50%" align="center"><em>Searching for movies by title</em></td>
+    <td width="50%" align="center"><em>Fetching and caching detailed movie data by IMDb ID</em></td>
+  </tr>
+  <tr>
+    <td><img src="Assets/V1.1/CLI_Search.png" alt="CLI Search Example" width="100%" /></td>
+    <td><img src="Assets/V1.1/CLI_Lookup.png" alt="CLI Lookup Example" width="100%" /></td>
+  </tr>
+</table>
+
+### V1.1 Demo Video
 
 https://github.com/user-attachments/assets/1d861ac8-a691-4f4d-91fa-9ea94d7da871
+
+## Technical Considerations & Known Limitations
+
+As this project is designed primarily as a technical assessment, several intentional trade-offs were made to prioritize ease-of-use and rapid deployment:
+
+- **CLI/API Coupling:** V1.1 featured tight UI/API coupling to establish a rapid MVP - V2 fully resolves this with a cleaner separation of concerns
+- **Automated Migrations:** Entity Framework migrations run automatically on startup for ease of local testing - in production, these would be managed via secure, on-demand scripts to prevent data loss (among other issues)
+- **In-Repo API Key:** A demo OMDb API key is deliberately included in the repository for a frictionless review process - exposing it here is safe as it exclusively accesses a free, read-only service
 
 ## Planned Improvements (V2)
 
