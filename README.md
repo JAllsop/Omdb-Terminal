@@ -15,7 +15,6 @@
 <div align="center">
 
 [![Build and Release CLI](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml/badge.svg)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml)
-[![GitHub issues](https://img.shields.io/github/issues/JAllsop/Omdb-Terminal-CarTrack-JAllsop)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/issues)
 
 </div>
 
@@ -137,7 +136,7 @@ The database relies on Entity Framework Core to manage relations between cached 
 
 ### V2 Demo Video
 
-*[Space for V2 Demo Video]*
+https://github.com/user-attachments/assets/52e00f92-4835-451e-9eb7-a4e2a3364787
 
 ### Terminal CLI (V1.1)
 
