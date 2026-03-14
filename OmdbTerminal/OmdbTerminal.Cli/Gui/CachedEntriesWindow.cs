@@ -7,39 +7,40 @@ namespace OmdbTerminal.Cli.Gui;
 public class CachedEntriesView : View
 {
     private readonly IApiClient _apiClient;
-    private ListView _entriesList;
-    private List<MovieDetails> _cachedMovies = new();
+    private readonly ListView _entriesList;
+    private List<MovieDetails> _cachedMovies = [];
 
     private int _currentPage = 1;
-    private const int PageSize = 20;
+    private const int _pageSize = 20;
 
     private RadioGroup _searchModeGroup;
-    
+
     // Basic search fields
-    private TextField _titleInput;
-    private TextField _yearInput;
-    private ComboBox _typeCombo;
-    private CheckBox _isDetailedCheck;
-    private CheckBox _isCustomCheck;
-    
+    private readonly TextField _titleInput;
+    private readonly TextField _yearInput;
+    private readonly ComboBox _typeCombo;
+    private readonly CheckBox _isDetailedCheck;
+    private readonly CheckBox _isCustomCheck;
+
     // Custom search fields
-    private TextField _customOdataInput;
-    
-    private TextField _pageInput;
-    private Label _statusLabel;
+    private readonly TextField _customOdataInput;
+
+    private readonly TextField _pageInput;
+    private readonly Label _statusLabel;
 
     public CachedEntriesView() : base()
     {
         _apiClient = IoC.Container.GetInstance<IApiClient>();
 
+        // Cache Operations Controls
         var clearBtn = new Button("Clear Cache") { X = 1, Y = 0 };
-        clearBtn.Clicked += async () => {
+        clearBtn.Clicked += async () =>
+        {
             var confirm = MessageBox.Query("Confirm", "Are you sure you want to clear all cached entries?", "Yes", "No");
-            if (confirm == 0)
-            {
-                await _apiClient.ClearCacheAsync();
-                await LoadEntriesAsync();
-            }
+            if (confirm != 0) return;
+
+            await _apiClient.ClearCacheAsync();
+            await LoadEntriesAsync();
         };
 
         var addBtn = new Button("Add Entry") { X = Pos.Right(clearBtn) + 2, Y = 0 };
@@ -51,40 +52,43 @@ public class CachedEntriesView : View
 
         Add(clearBtn, addBtn);
 
+        // Search Mode Selector
         _searchModeGroup = new RadioGroup(["Basic Search", "Custom OData"]) { X = 1, Y = 2, DisplayMode = DisplayModeLayout.Horizontal };
         Add(_searchModeGroup);
-        
-        // Basic Search UI
+
+        // Basic Search UI Configuration
         var titleLbl = new Label("Title:") { X = 1, Y = 4 };
         _titleInput = new TextField("") { X = 8, Y = 4, Width = 20 };
-        
+
         var yearLbl = new Label("Year:") { X = Pos.Right(_titleInput) + 2, Y = 4 };
         _yearInput = new TextField("") { X = Pos.Right(yearLbl) + 1, Y = 4, Width = 6 };
-        
+
         var typeLbl = new Label("Type:") { X = Pos.Right(_yearInput) + 2, Y = 4 };
         _typeCombo = new ComboBox() { X = Pos.Right(typeLbl) + 1, Y = 4, Width = 15, Height = 5 };
         _typeCombo.SetSource(new List<string> { "Any", "Movie", "Series", "Episode" });
         _typeCombo.SelectedItem = 0;
-        
+
         _isDetailedCheck = new CheckBox("Is Detailed") { X = 1, Y = 5 };
         _isCustomCheck = new CheckBox("Is Custom") { X = Pos.Right(_isDetailedCheck) + 2, Y = 5 };
-        
+
         Add(titleLbl, _titleInput, yearLbl, _yearInput, typeLbl, _typeCombo, _isDetailedCheck, _isCustomCheck);
 
-        // Custom OData UI
+        // Custom OData Search UI Configuration
         var customLbl = new Label("OData:") { X = 1, Y = 7 };
         _customOdataInput = new TextField("") { X = 8, Y = 7, Width = Dim.Fill() - 2 };
         var customHelp = new Label("(e.g. contains(tolower(Title), 'batman') and Type eq 'Movie')") { X = 8, Y = 8 };
-        
+
         Add(customLbl, _customOdataInput, customHelp);
 
+        // Unified Search Controls
         var searchBtn = new Button("Search") { X = 1, Y = 10 };
         searchBtn.Clicked += async () => { _currentPage = 1; await LoadEntriesAsync(); };
-        
+
         _statusLabel = new Label("") { X = Pos.Right(searchBtn) + 2, Y = 10, Width = Dim.Fill() };
-        
+
         Add(searchBtn, _statusLabel);
 
+        // Entries List View
         _entriesList = new ListView(new List<string>())
         {
             X = 1,
@@ -94,7 +98,7 @@ public class CachedEntriesView : View
             AllowsMarking = false
         };
 
-        _entriesList.OpenSelectedItem += async (e) => 
+        _entriesList.OpenSelectedItem += async (e) =>
         {
             if (e.Item >= 0 && e.Item < _cachedMovies.Count)
             {
@@ -105,20 +109,22 @@ public class CachedEntriesView : View
 
         Add(_entriesList);
 
-        // Pagination
+        // Pagination Controls Development
         var prevBtn = new Button("Prev") { X = 1, Y = Pos.AnchorEnd(1) };
-        prevBtn.Clicked += async () => {
-            if (_currentPage > 1) {
-                _currentPage--;
-                await LoadEntriesAsync();
-            }
+        prevBtn.Clicked += async () =>
+        {
+            if (_currentPage <= 1) return;
+
+            _currentPage--;
+            await LoadEntriesAsync();
         };
 
         var pageLabel = new Label("Page:") { X = Pos.Right(prevBtn) + 2, Y = Pos.AnchorEnd(1) };
         _pageInput = new TextField("1") { X = Pos.Right(pageLabel) + 1, Y = Pos.AnchorEnd(1), Width = 5 };
         var goBtn = new Button("Go") { X = Pos.Right(_pageInput) + 1, Y = Pos.AnchorEnd(1) };
 
-        goBtn.Clicked += async () => {
+        goBtn.Clicked += async () =>
+        {
             if (int.TryParse(_pageInput.Text.ToString(), out int p) && p > 0)
             {
                 _currentPage = p;
@@ -127,13 +133,15 @@ public class CachedEntriesView : View
         };
 
         var nextBtn = new Button("Next") { X = Pos.Right(goBtn) + 2, Y = Pos.AnchorEnd(1) };
-        nextBtn.Clicked += async () => {
+        nextBtn.Clicked += async () =>
+        {
             _currentPage++;
             await LoadEntriesAsync();
         };
 
         Add(prevBtn, pageLabel, _pageInput, goBtn, nextBtn);
-        
+
+        // Initial Fetch
         _ = LoadEntriesAsync();
     }
 
@@ -141,72 +149,37 @@ public class CachedEntriesView : View
     {
         try
         {
-            Application.MainLoop.Invoke(() => { _statusLabel.Text = "Loading..."; _pageInput.Text = _currentPage.ToString(); Application.Refresh(); });
-            
-            string odataQuery = "";
-            var filters = new List<string>();
-            
-            if (_searchModeGroup.SelectedItem == 0)
+            Application.MainLoop.Invoke(() =>
             {
-                var title = _titleInput.Text.ToString()?.Trim();
-                if (!string.IsNullOrEmpty(title))
-                {
-                    filters.Add($"contains(tolower(Title), '{title.ToLower()}')");
-                }
-                var year = _yearInput.Text.ToString()?.Trim();
-                if (!string.IsNullOrEmpty(year))
-                {
-                    filters.Add($"Year eq '{year}'");
-                }
-                if (_typeCombo.SelectedItem > 0)
-                {
-                    var type = (MediaType)(_typeCombo.SelectedItem - 1);
-                    filters.Add($"Type eq '{type}'");
-                }
-                if (_isDetailedCheck.Checked == true)
-                {
-                    filters.Add("IsDetailed eq true");
-                }
-                if (_isCustomCheck.Checked == true)
-                {
-                    filters.Add("IsCustom eq true");
-                }
-                
-                if (filters.Any())
-                {
-                    odataQuery = "$filter=" + string.Join(" and ", filters);
-                }
-            }
-            else
-            {
-                var customQuery = _customOdataInput.Text.ToString()?.Trim();
-                if (!string.IsNullOrEmpty(customQuery))
-                {
-                    odataQuery = customQuery.StartsWith('$') ? customQuery : $"$filter={customQuery}";
-                }
-            }
-            
-            int skip = (_currentPage - 1) * PageSize;
-            string paging = $"$skip={skip}&$top={PageSize}";
-            
+                _statusLabel.Text = "Loading...";
+                _pageInput.Text = _currentPage.ToString();
+                Application.Refresh();
+            });
+
+            string odataQuery = BuildODataQuery();
+
+            // Build pagination suffix
+            int skip = (_currentPage - 1) * _pageSize;
+            string paging = $"$skip={skip}&$top={_pageSize}";
             string finalQuery = string.IsNullOrEmpty(odataQuery) ? $"?{paging}" : $"?{odataQuery}&{paging}";
-            
+
+            // Fetch records from API and update UI
             var entries = await _apiClient.GetCachedEntriesAsync(finalQuery);
-            if (entries != null)
+            if (entries == null) return;
+
+            _cachedMovies = entries;
+            var displayList = _cachedMovies.Select(m => $"[{(m.IsCustom ? "CUST" : " CA ")}] [{m.Type}] {m.Title} ({m.Year}) {(m.IsDetailed ? "[Det]" : "")} ID: {m.ImdbId}").ToList();
+
+            Application.MainLoop.Invoke(() =>
             {
-                _cachedMovies = entries;
-                var displayList = _cachedMovies.Select(m => $"[{(m.IsCustom ? "CUST" : " CA ")}] [{m.Type}] {m.Title} ({m.Year}) {(m.IsDetailed?"[Det]":"")} ID: {m.ImdbId}").ToList();
-                Application.MainLoop.Invoke(() => 
-                {
-                    _entriesList.SetSource(displayList);
-                    _statusLabel.Text = $"Loaded {entries.Count} entries for Page {_currentPage}";
-                    Application.Refresh();
-                });
-            }
+                _entriesList.SetSource(displayList);
+                _statusLabel.Text = $"Loaded {entries.Count} entries for Page {_currentPage}";
+                Application.Refresh();
+            });
         }
         catch (Exception ex)
         {
-            Application.MainLoop.Invoke(() => 
+            Application.MainLoop.Invoke(() =>
             {
                 _statusLabel.Text = "Error loading cache";
                 MessageBox.ErrorQuery("Error", $"Could not load cache: {ex.Message}", "OK");
@@ -214,42 +187,86 @@ public class CachedEntriesView : View
         }
     }
 
+    private string BuildODataQuery()
+    {
+        string odataQuery = "";
+
+        // Custom OData Mode
+        if (_searchModeGroup.SelectedItem != 0)
+        {
+            var customQuery = _customOdataInput.Text.ToString()?.Trim();
+            if (!string.IsNullOrEmpty(customQuery))
+            {
+                odataQuery = customQuery.StartsWith('$') ? customQuery : $"$filter={customQuery}";
+            }
+            return odataQuery;
+        }
+
+        // Basic Search Mode
+        var filters = new List<string>();
+
+        var title = _titleInput.Text.ToString()?.Trim();
+        if (!string.IsNullOrEmpty(title)) filters.Add($"contains(tolower(Title), '{title.ToLower()}')");
+
+        var year = _yearInput.Text.ToString()?.Trim();
+        if (!string.IsNullOrEmpty(year)) filters.Add($"Year eq '{year}'");
+
+        if (_typeCombo.SelectedItem > 0)
+        {
+            var type = (MediaType)(_typeCombo.SelectedItem - 1);
+            filters.Add($"Type eq '{type}'");
+        }
+
+        if (_isDetailedCheck.Checked == true) filters.Add("IsDetailed eq true");
+
+        if (_isCustomCheck.Checked == true) filters.Add("IsCustom eq true");
+
+        if (filters.Count != 0) odataQuery = "$filter=" + string.Join(" and ", filters);
+
+        return odataQuery;
+    }
+
     private async Task ShowEntryOptions(MovieDetails movie)
     {
         var result = MessageBox.Query("Options", $"Select action for {movie.Title}", "View Details", "Edit", "Delete", "Cancel");
-        if (result == 0)
+        switch (result)
         {
-            Application.Run(new MovieDetailsWindow(movie));
+            case 0: // View Details
+                Application.Run(new MovieDetailsWindow(movie));
+                break;
+            case 1: // Edit
+                await EditEntryAsync(movie, isNew: false);
+                break;
+            case 2: // Delete
+                await HandleDeleteAction(movie);
+                break;
         }
-        else if (result == 1)
+    }
+
+    private async Task HandleDeleteAction(MovieDetails movie)
+    {
+        var confirm = MessageBox.Query("Confirm", $"Are you sure you want to delete {movie.Title}?", "Yes", "No");
+        if (confirm != 0) return;
+
+        try
         {
-            await EditEntryAsync(movie, isNew: false);
-        }
-        else if (result == 2)
-        {
-            var confirm = MessageBox.Query("Confirm", $"Are you sure you want to delete {movie.Title}?", "Yes", "No");
-            if (confirm == 0)
+            var success = await _apiClient.DeleteCachedEntryAsync(movie.ImdbId);
+            Application.MainLoop.Invoke(async () =>
             {
-                try
+                if (success)
                 {
-                    var success = await _apiClient.DeleteCachedEntryAsync(movie.ImdbId);
-                    Application.MainLoop.Invoke(async () => {
-                        if (success)
-                        {
-                            MessageBox.Query("Success", "Entry deleted.", "OK");
-                            await LoadEntriesAsync();
-                        }
-                        else
-                        {
-                            MessageBox.ErrorQuery("Error", "Could not delete entry.", "OK");
-                        }
-                    });
+                    MessageBox.Query("Success", "Entry deleted.", "OK");
+                    await LoadEntriesAsync();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Application.MainLoop.Invoke(() => MessageBox.ErrorQuery("Error", $"API Error: {ex.Message}", "OK"));
+                    MessageBox.ErrorQuery("Error", "Could not delete entry.", "OK");
                 }
-            }
+            });
+        }
+        catch (Exception ex)
+        {
+            Application.MainLoop.Invoke(() => MessageBox.ErrorQuery("Error", $"API Error: {ex.Message}", "OK"));
         }
     }
 
@@ -276,7 +293,7 @@ public class CachedEntriesView : View
         scrollView.Add(layout);
 
         int row = 0;
-        
+
         var titleLbl = new Label("Title:") { X = 1, Y = row };
         var titleInput = new TextField(movie.Title ?? "") { X = 15, Y = row++, Width = 60 };
 
@@ -286,7 +303,7 @@ public class CachedEntriesView : View
         var typeLbl = new Label("Type:") { X = 1, Y = row };
         var typeStr = movie.Type?.ToString() ?? "Movie";
         var typeIndex = typeStr == "Movie" ? 0 : (typeStr == "Series" ? 1 : 2);
-        var typeGroup = new RadioGroup(new NStack.ustring[] { "Movie", "Series", "Episode" }) { X = 15, Y = row++, SelectedItem = typeIndex };
+        var typeGroup = new RadioGroup(["Movie", "Series", "Episode"]) { X = 15, Y = row++, SelectedItem = typeIndex };
         row += 2; // Radio group takes more space
 
         var ratedLbl = new Label("Rated:") { X = 1, Y = row };
@@ -381,7 +398,7 @@ public class CachedEntriesView : View
             movie.Production = productionInput.Text.ToString() ?? "";
             movie.Website = websiteInput.Text.ToString() ?? "";
             movie.DVD = dvdInput.Text.ToString() ?? "";
-            
+
             var selectedTypeStr = typeGroup.SelectedItem == 0 ? "Movie" : (typeGroup.SelectedItem == 1 ? "Series" : "Episode");
             if (Enum.TryParse<MediaType>(selectedTypeStr, true, out var mType))
             {
@@ -400,17 +417,16 @@ public class CachedEntriesView : View
                     success = await _apiClient.UpdateCachedEntryAsync(movie.ImdbId, movie);
                 }
 
-                Application.MainLoop.Invoke(async () => {
-                    if (success)
-                    {
-                        MessageBox.Query("Success", "Entry saved.", "OK");
-                        Application.RequestStop(editDialog);
-                        await LoadEntriesAsync();
-                    }
-                    else
+                Application.MainLoop.Invoke(async () =>
+                {
+                    if (!success)
                     {
                         MessageBox.ErrorQuery("Error", "Failed to save entry.", "OK");
+                        return;
                     }
+                    MessageBox.Query("Success", "Entry saved.", "OK");
+                    Application.RequestStop(editDialog);
+                    await LoadEntriesAsync();
                 });
             }
             catch (Exception ex)
@@ -424,9 +440,9 @@ public class CachedEntriesView : View
 
         editDialog.AddButton(saveBtn);
         editDialog.AddButton(cancelBtn);
-        
+
         editDialog.Add(scrollView);
-        
+
         Application.Run(editDialog);
     }
 }
