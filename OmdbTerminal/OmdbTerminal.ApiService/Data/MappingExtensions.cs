@@ -31,9 +31,9 @@ namespace OmdbTerminal.ApiService.Data
                 BoxOffice = details.BoxOffice,
                 Production = details.Production,
                 Website = details.Website,
-                Ratings = details.Ratings.Select(r => new RatingsEntity { MovieId = details.ImdbId, Source = r.Source, Value = r.Value }).ToList(),
+                Ratings = [.. details.Ratings.Select(r => new RatingsEntity { MovieId = details.ImdbId, Source = r.Source, Value = r.Value })],
                 CachedAt = DateTime.UtcNow,
-                IsDetailed = true,
+                IsDetailed = details.IsDetailed,
                 IsCustom = details.IsCustom
             };
 

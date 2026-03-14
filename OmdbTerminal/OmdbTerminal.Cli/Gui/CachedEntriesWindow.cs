@@ -13,7 +13,7 @@ public class CachedEntriesView : View
     private int _currentPage = 1;
     private const int _pageSize = 20;
 
-    private RadioGroup _searchModeGroup;
+    private readonly RadioGroup _searchModeGroup;
 
     // Basic search fields
     private readonly TextField _titleInput;
@@ -59,6 +59,14 @@ public class CachedEntriesView : View
         // Basic Search UI Configuration
         var titleLbl = new Label("Title:") { X = 1, Y = 4 };
         _titleInput = new TextField("") { X = 8, Y = 4, Width = 20 };
+        _titleInput.KeyPress += async (e) =>
+        {
+            if (e.KeyEvent.Key != Key.Enter) return;
+
+            e.Handled = true;
+            _currentPage = 1;
+            await LoadEntriesAsync();
+        };
 
         var yearLbl = new Label("Year:") { X = Pos.Right(_titleInput) + 2, Y = 4 };
         _yearInput = new TextField("") { X = Pos.Right(yearLbl) + 1, Y = 4, Width = 6 };
@@ -75,26 +83,48 @@ public class CachedEntriesView : View
 
         // Custom OData Search UI Configuration
         var customLbl = new Label("OData:") { X = 1, Y = 7 };
+        var customHelp = new Label("e.g. contains(tolower(Title), 'batman') and Year eq '2022'") { X = 8, Y = 8 };
         _customOdataInput = new TextField("") { X = 8, Y = 7, Width = Dim.Fill() - 2 };
-        var customHelp = new Label("(e.g. contains(tolower(Title), 'batman') and Type eq 'Movie')") { X = 8, Y = 8 };
+        _customOdataInput.KeyPress += async (e) =>
+        {
+            if (e.KeyEvent.Key != Key.Enter) return;
+
+            e.Handled = true;
+            _currentPage = 1;
+            await LoadEntriesAsync();
+        };
+
 
         Add(customLbl, _customOdataInput, customHelp);
 
         // Unified Search Controls
         var searchBtn = new Button("Search") { X = 1, Y = 10 };
-        searchBtn.Clicked += async () => { _currentPage = 1; await LoadEntriesAsync(); };
+        searchBtn.Clicked += async () =>
+        {
+            _currentPage = 1;
+            await LoadEntriesAsync();
+        };
 
         _statusLabel = new Label("") { X = Pos.Right(searchBtn) + 2, Y = 10, Width = Dim.Fill() };
 
         Add(searchBtn, _statusLabel);
 
         // Entries List View
-        _entriesList = new ListView(new List<string>())
+        var entriesContainer = new FrameView()
         {
             X = 1,
             Y = 12,
             Width = Dim.Fill() - 2,
             Height = Dim.Fill() - 3,
+            Border = new Border() { BorderStyle = BorderStyle.None }
+        };
+
+        _entriesList = new ListView(new List<string>())
+        {
+            X = 0,
+            Y = 0,
+            Width = Dim.Fill(),
+            Height = Dim.Fill(),
             AllowsMarking = false
         };
 
@@ -107,7 +137,30 @@ public class CachedEntriesView : View
             }
         };
 
-        Add(_entriesList);
+        entriesContainer.Add(_entriesList);
+
+        var scrollBar = new ScrollBarView(_entriesList, true);
+
+        scrollBar.ChangedPosition += () =>
+        {
+            _entriesList.TopItem = scrollBar.Position;
+            if (_entriesList.TopItem != scrollBar.Position)
+            {
+                scrollBar.Position = _entriesList.TopItem;
+            }
+            _entriesList.SetNeedsDisplay();
+        };
+
+        _entriesList.DrawContent += (e) =>
+        {
+            scrollBar.Size = _entriesList.Source.Count;
+            scrollBar.Position = _entriesList.TopItem;
+            scrollBar.Refresh();
+        };
+
+        entriesContainer.Add(scrollBar);
+
+        Add(entriesContainer);
 
         // Pagination Controls Development
         var prevBtn = new Button("Prev") { X = 1, Y = Pos.AnchorEnd(1) };
@@ -156,19 +209,19 @@ public class CachedEntriesView : View
                 Application.Refresh();
             });
 
-            string odataQuery = BuildODataQuery();
+            var odataQuery = BuildODataQuery();
 
             // Build pagination suffix
             int skip = (_currentPage - 1) * _pageSize;
-            string paging = $"$skip={skip}&$top={_pageSize}";
-            string finalQuery = string.IsNullOrEmpty(odataQuery) ? $"?{paging}" : $"?{odataQuery}&{paging}";
+            var paging = $"$skip={skip}&$top={_pageSize}";
+            var finalQuery = string.IsNullOrEmpty(odataQuery) ? $"?{paging}" : $"?{odataQuery}&{paging}";
 
             // Fetch records from API and update UI
             var entries = await _apiClient.GetCachedEntriesAsync(finalQuery);
             if (entries == null) return;
 
             _cachedMovies = entries;
-            var displayList = _cachedMovies.Select(m => $"[{(m.IsCustom ? "CUST" : " CA ")}] [{m.Type}] {m.Title} ({m.Year}) {(m.IsDetailed ? "[Det]" : "")} ID: {m.ImdbId}").ToList();
+            var displayList = _cachedMovies.Select(GetDisplayTextForMovie).ToList();
 
             Application.MainLoop.Invoke(() =>
             {
@@ -189,7 +242,7 @@ public class CachedEntriesView : View
 
     private string BuildODataQuery()
     {
-        string odataQuery = "";
+        var odataQuery = "";
 
         // Custom OData Mode
         if (_searchModeGroup.SelectedItem != 0)
@@ -197,7 +250,46 @@ public class CachedEntriesView : View
             var customQuery = _customOdataInput.Text.ToString()?.Trim();
             if (!string.IsNullOrEmpty(customQuery))
             {
-                odataQuery = customQuery.StartsWith('$') ? customQuery : $"$filter={customQuery}";
+                var queryParams = customQuery.Split('&', StringSplitOptions.RemoveEmptyEntries);
+                var formattedParams = new List<string>();
+
+                var odataKeywords = new[] { "filter", "expand", "orderby", "select", "top", "skip", "count" };
+
+                for (int i = 0; i < queryParams.Length; i++)
+                {
+                    var p = queryParams[i];
+                    var part = p.Trim();
+                    var eqIndex = part.IndexOf('=');
+
+                    bool matchedKeyword = false;
+
+                    if (eqIndex > 0)
+                    {
+                        var key = part[..eqIndex].Trim();
+                        var cleanKey = key.TrimStart('$').ToLower();
+
+                        if (odataKeywords.Contains(cleanKey))
+                        {
+                            formattedParams.Add($"${cleanKey}={part.Substring(eqIndex + 1).Trim()}");
+                            matchedKeyword = true;
+                        }
+                    }
+
+                    if (!matchedKeyword)
+                    {
+                        // Treat the first item as a raw filter if it lacks an OData keyword prefix
+                        if (i == 0 && !part.StartsWith('$') && !part.StartsWith("filter=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            formattedParams.Add($"$filter={part}");
+                        }
+                        else
+                        {
+                            formattedParams.Add(part);
+                        }
+                    }
+                }
+
+                odataQuery = string.Join("&", formattedParams);
             }
             return odataQuery;
         }
@@ -232,7 +324,7 @@ public class CachedEntriesView : View
         switch (result)
         {
             case 0: // View Details
-                Application.Run(new MovieDetailsWindow(movie));
+                Application.Run(new MovieDetailsWindow(movie, updatedDetails => UpdateItemDetails(updatedDetails)));
                 break;
             case 1: // Edit
                 await EditEntryAsync(movie, isNew: false);
@@ -241,6 +333,28 @@ public class CachedEntriesView : View
                 await HandleDeleteAction(movie);
                 break;
         }
+    }
+
+    private void UpdateItemDetails(MovieDetails updatedDetails)
+    {
+        var index = _cachedMovies.FindIndex(m => m.ImdbId == updatedDetails.ImdbId);
+        if (index == 0) return;
+
+        _cachedMovies[index] = updatedDetails;
+        var displayList = _cachedMovies.Select(GetDisplayTextForMovie).ToList();
+        Application.MainLoop.Invoke(() =>
+        {
+            var topItem = _entriesList.TopItem;
+            var selectedItem = _entriesList.SelectedItem;
+
+            _entriesList.SetSource(displayList);
+            _entriesList.TopItem = topItem;
+            _entriesList.SelectedItem = selectedItem;
+
+            _entriesList.SetNeedsDisplay();
+            Application.Refresh();
+        });
+
     }
 
     private async Task HandleDeleteAction(MovieDetails movie)
@@ -426,7 +540,15 @@ public class CachedEntriesView : View
                     }
                     MessageBox.Query("Success", "Entry saved.", "OK");
                     Application.RequestStop(editDialog);
-                    await LoadEntriesAsync();
+
+                    if (isNew)
+                    {
+                        await LoadEntriesAsync();
+                    }
+                    else
+                    {
+                        UpdateItemDetails(movie);
+                    }
                 });
             }
             catch (Exception ex)
@@ -445,4 +567,7 @@ public class CachedEntriesView : View
 
         Application.Run(editDialog);
     }
+
+    private static string GetDisplayTextForMovie(MovieDetails m)
+        => $"[{(m.IsCustom ? "CUST" : "API")}] {(m.IsDetailed ? "[Detailed]" : " [Basic]  ")} {m.Title} ({m.Year}) [{m.Type}] ID: {m.ImdbId}";
 }

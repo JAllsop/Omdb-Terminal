@@ -16,11 +16,15 @@ public class ImageView : View
     private int _renderedWidth = 0;
     private int _renderedHeight = 0;
     private string _currentUrl = string.Empty;
+    private bool _loadFailed = false;
 
     public void LoadImageFromUrl(string url)
     {
+        _loadFailed = false;
         if (string.IsNullOrWhiteSpace(url) || url == "N/A" || _currentUrl == url)
         {
+            _loadFailed = true;
+            SetNeedsDisplay();
             return;
         }
 
@@ -45,7 +49,11 @@ public class ImageView : View
             }
             catch
             {
-                // Fallback / fail silently
+                Application.MainLoop.Invoke(() =>
+                {
+                    _loadFailed = true;
+                    SetNeedsDisplay();
+                });
             }
         });
     }
@@ -56,7 +64,7 @@ public class ImageView : View
 
         if (_originalImage == null)
         {
-            var text = "Loading...";
+            var text = _loadFailed ? "No Poster" : "Loading...";
             Move(Math.Max(0, (bounds.Width - text.Length) / 2), Math.Max(0, bounds.Height / 2));
             Driver.AddStr(text);
             return;

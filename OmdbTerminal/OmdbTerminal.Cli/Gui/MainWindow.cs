@@ -46,7 +46,7 @@ public class MainWindow : Window
 
         var searchLabel = new Label("Search:") { X = 1, Y = 3 };
         _searchInput = new TextField("") { X = 9, Y = 3, Width = Dim.Fill() - 2 };
-        _searchInput.KeyDown += async (e) =>
+        _searchInput.KeyPress += async (e) =>
         {
             if (e.KeyEvent.Key != Key.Enter) return;
 
@@ -90,10 +90,7 @@ public class MainWindow : Window
         _resultsList.OpenSelectedItem += (e) =>
         {
             var item = _combinedResults[e.Item];
-            Application.Run(new MovieDetailsWindow(item.Details, updatedDetails =>
-            {
-                item.Details = updatedDetails;
-            }));
+            Application.Run(new MovieDetailsWindow(item.Details, updatedDetails => item.Details = updatedDetails));
         };
 
         searchView.Add(apiLabel, _resultsList);

@@ -69,7 +69,9 @@ namespace OmdbTerminal.ApiService.Services
                 }
 
                 logger.LogInformation("Detail Cache MISS (or partial) for {Id} - Fetching from OMDB...", imdbId);
+
                 var details = await omdbClient.GetMovieDetailsByIdAsync(imdbId);
+                details.IsDetailed = true;
 
                 if (!details.Response) return null;
 
@@ -118,6 +120,7 @@ namespace OmdbTerminal.ApiService.Services
                 logger.LogInformation("Detail Cache MISS (or partial) for Title {Title} - Fetching from OMDB...", title);
 
                 var details = await omdbClient.GetMovieDetailsByTitleAsync(title, type, year);
+                details.IsDetailed = true;
 
                 if (!details.Response) return null;
 

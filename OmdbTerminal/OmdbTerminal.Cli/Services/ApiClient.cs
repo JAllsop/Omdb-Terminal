@@ -33,7 +33,9 @@ internal class ApiClient(MoviesHttpClient moviesClient, CachedEntriesHttpClient 
 
     public async Task<List<MovieDetails>?> GetCachedEntriesAsync(string? filter = null)
     {
-        var url = string.IsNullOrWhiteSpace(filter) ? "" : filter.StartsWith("?") ? filter : $"?$filter={Uri.EscapeDataString(filter)}";
+        var url = string.IsNullOrWhiteSpace(filter) ? "" : filter.StartsWith('?') ? filter : $"?$filter={Uri.EscapeDataString(filter)}";
+        url += "&$expand=Ratings";
+
         return await cachedEntriesClient.GetFromJsonAsync<List<MovieDetails>>(url);
     }
 
