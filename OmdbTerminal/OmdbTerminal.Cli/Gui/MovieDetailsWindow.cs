@@ -143,8 +143,7 @@ public class MovieDetailsWindow : Dialog
 
         if (_fetchFullDetailsBtn != null)
         {
-            // In Terminal.Gui 1.19.0 Dialog buttons are tricky to remove. 
-            // Let's hide it by disabling and clearing its text.
+            // Terminal.Gui Dialog buttons can't be/are tricky to remove - hiding by disabling and clearing its text
             _fetchFullDetailsBtn.Visible = false;
             _fetchFullDetailsBtn.Text = "";
         }

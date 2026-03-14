@@ -122,7 +122,7 @@ public class ImageView : View
         }
     }
 
-    private Terminal.Gui.Color GetClosestConsoleColor(byte r, byte g, byte b)
+    private static Terminal.Gui.Color GetClosestConsoleColor(byte r, byte g, byte b)
     {
         Terminal.Gui.Color closest = Terminal.Gui.Color.Black;
         double minDistance = double.MaxValue;
