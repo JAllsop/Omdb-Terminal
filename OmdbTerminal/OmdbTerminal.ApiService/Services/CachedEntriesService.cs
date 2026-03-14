@@ -8,14 +8,14 @@ namespace OmdbTerminal.ApiService.Services
     {
         public IQueryable<MovieEntity> GetQueryable()
         {
-            return dbContext.CachedMovies;
+            return dbContext.CachedMovies.Include(m => m.Ratings);
         }
 
         public async Task<MovieEntity?> GetByIdAsync(string id)
         {
             try
             {
-                return await dbContext.CachedMovies.FindAsync(id);
+                return await dbContext.CachedMovies.Include(m => m.Ratings).FirstOrDefaultAsync(m => m.Id == id);
             }
             catch (Exception ex)
             {
@@ -29,6 +29,7 @@ namespace OmdbTerminal.ApiService.Services
             try
             {
                 return await dbContext.CachedMovies
+                    .Include(m => m.Ratings)
                     .Where(m => ids.Contains(m.Id))
                     .ToListAsync();
             }
@@ -52,6 +53,11 @@ namespace OmdbTerminal.ApiService.Services
 
                 return count > 0;
             }
+            catch (DbUpdateException ex)
+            {
+                logger.LogWarning(ex, "Race condition: Movie {Id} was already cached by another request", movie.Id);
+                return false;
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error creating cached movie: {Id}", movie.Id);
@@ -63,7 +69,7 @@ namespace OmdbTerminal.ApiService.Services
         {
             try
             {
-                var existingMovie = await dbContext.CachedMovies.FindAsync(id);
+                var existingMovie = await dbContext.CachedMovies.Include(m => m.Ratings).FirstOrDefaultAsync(m => m.Id == id);
                 if (existingMovie == null)
                 {
                     logger.LogWarning("Attempted to update non-existent movie in cache: {Id}", id);
@@ -72,9 +78,29 @@ namespace OmdbTerminal.ApiService.Services
 
                 existingMovie.Title = updatedMovie.Title;
                 existingMovie.Year = updatedMovie.Year;
-                existingMovie.Plot = updatedMovie.Plot;
-                existingMovie.PosterUrl = updatedMovie.PosterUrl;
+                existingMovie.Rated = updatedMovie.Rated;
+                existingMovie.Released = updatedMovie.Released;
+                existingMovie.Runtime = updatedMovie.Runtime;
                 existingMovie.Genre = updatedMovie.Genre;
+                existingMovie.Director = updatedMovie.Director;
+                existingMovie.Writer = updatedMovie.Writer;
+                existingMovie.Actors = updatedMovie.Actors;
+                existingMovie.Plot = updatedMovie.Plot;
+                existingMovie.Language = updatedMovie.Language;
+                existingMovie.Country = updatedMovie.Country;
+                existingMovie.Awards = updatedMovie.Awards;
+                existingMovie.PosterUrl = updatedMovie.PosterUrl;
+                existingMovie.Ratings = updatedMovie.Ratings;
+                existingMovie.Metascore = updatedMovie.Metascore;
+                existingMovie.ImdbRating = updatedMovie.ImdbRating;
+                existingMovie.ImdbVotes = updatedMovie.ImdbVotes;
+                existingMovie.Type = updatedMovie.Type;
+                existingMovie.DVD = updatedMovie.DVD;
+                existingMovie.BoxOffice = updatedMovie.BoxOffice;
+                existingMovie.Production = updatedMovie.Production;
+                existingMovie.Website = updatedMovie.Website;
+                existingMovie.IsCustom = updatedMovie.IsCustom;
+                existingMovie.IsDetailed = updatedMovie.IsDetailed;
                 existingMovie.CachedAt = DateTime.UtcNow;
 
                 var count = await dbContext.SaveChangesAsync();
@@ -92,7 +118,7 @@ namespace OmdbTerminal.ApiService.Services
         {
             try
             {
-                var movie = await dbContext.CachedMovies.FindAsync(id);
+                var movie = await dbContext.CachedMovies.Include(m => m.Ratings).FirstOrDefaultAsync(m => m.Id == id);
                 if (movie == null)
                 {
                     logger.LogWarning("Attempted to delete non-existent movie from cache: {Id}", id);
@@ -143,6 +169,11 @@ namespace OmdbTerminal.ApiService.Services
                 var count = await dbContext.SaveChangesAsync();
 
                 return count > 0;
+            }
+            catch (DbUpdateException ex)
+            {
+                logger.LogWarning(ex, "Race condition: Search cache or movies for query {Query} were already saved by another request", searchCache.Query);
+                return false;
             }
             catch (Exception ex)
             {

@@ -56,5 +56,17 @@ public class ODataOperationFilter : IOperationFilter
             Description = "Select specific properties e.g. Title, Year",
             Schema = new OpenApiSchema { Type = JsonSchemaType.String }
         });
+
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            Name = "$expand",
+            In = ParameterLocation.Query,
+            Description = "Expand related entities e.g. Movie Ratings",
+            Schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Default = System.Text.Json.Nodes.JsonValue.Create("Ratings")
+            }
+        });
     }
 }

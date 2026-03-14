@@ -20,6 +20,7 @@ builder.Services.AddControllers()
         .OrderBy()
         .SetMaxTop(100)
         .Count()
+        .Expand()
     );
 
 builder.Services.AddEndpointsApiExplorer();

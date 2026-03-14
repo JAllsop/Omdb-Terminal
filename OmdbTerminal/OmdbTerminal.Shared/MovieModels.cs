@@ -119,6 +119,14 @@ public class MovieDetails
     [JsonPropertyName("imdbID")]
     public string ImdbId { get; set; } = default!;
 
+    [JsonPropertyName("Id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string? ODataId
+    {
+        get => null;
+        set { if (value != null) ImdbId = value; }
+    }
+
     [JsonPropertyName("Type")]
     [JsonConverter(typeof(StringToMediaTypeConverter))]
     public MediaType? Type { get; set; }
@@ -138,6 +146,8 @@ public class MovieDetails
     [JsonPropertyName("Response")]
     [JsonConverter(typeof(StringToBoolConverter))]
     public bool Response { get; set; } = false;
+
+    public bool IsDetailed { get; set; } = false;
 
     public bool IsCustom { get; set; } = false;
 }

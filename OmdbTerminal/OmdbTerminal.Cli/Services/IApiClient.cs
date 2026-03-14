@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using OmdbTerminal.Shared;
 
-namespace OmdbTerminal.Cli.Services
+namespace OmdbTerminal.Cli.Services;
+
+public interface IApiClient
 {
-    internal interface IApiClient
-    {
-        Task SearchAndDisplayAsync(string title, int page = 1, MediaType? type = null, string? year = null);
+    Task<OmdbSearchResponse?> SearchMoviesAsync(string title, int page = 1, MediaType? type = null, string? year = null);
 
-        Task SearchByImdbIdAndDisplayAsync(string id);
+    Task<MovieDetails?> GetMovieDetailsByIdAsync(string id);
 
-        Task SearchByTitleAndDisplayAsync(string title, MediaType? type = null, string? year = null);
+    Task<MovieDetails?> GetMovieDetailsByTitleAsync(string title, MediaType? type = null, string? year = null);
+    
+    Task<List<MovieDetails>?> GetCachedEntriesAsync(string? filter = null);
 
-        Task ClearCacheAndDisplayAsync();
+    Task<MovieDetails?> GetCachedEntryByIdAsync(string id);
 
-        Task ManageCustomEntitiesAsync();
-    }
+    Task<bool> AddCachedEntryAsync(MovieDetails movie);
+
+    Task<bool> UpdateCachedEntryAsync(string id, MovieDetails movie);
+
+    Task<bool> DeleteCachedEntryAsync(string id);
+
+    Task<bool> ClearCacheAsync();
 }

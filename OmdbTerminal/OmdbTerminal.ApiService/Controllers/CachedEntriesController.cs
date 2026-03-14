@@ -15,8 +15,8 @@ namespace OmdbTerminal.ApiService.Controllers
         [EnableQuery] // This single attribute turns this into a full OData endpoint
         public IQueryable<MovieEntity> Get()
         {
-            // OData intercepts this IQueryable and applies the URL filters
-            return cachedService.GetQueryable();
+            // OData intercepts this IQueryable and applies the URL filters - including the expansion by default (design decision)
+            return cachedService.GetQueryable().Include(m => m.Ratings);
         }
 
         // CRUD: READ (Specific Entry)

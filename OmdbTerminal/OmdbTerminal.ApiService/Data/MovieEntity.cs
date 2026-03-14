@@ -1,5 +1,6 @@
 ﻿using OmdbTerminal.Shared;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace OmdbTerminal.ApiService.Data
 {
@@ -34,6 +35,7 @@ namespace OmdbTerminal.ApiService.Data
 
         public string Awards { get; set; } = "N/A";
 
+        [JsonPropertyName("Poster")]
         public string PosterUrl { get; set; } = "N/A";
 
         public List<RatingsEntity> Ratings { get; set; } = [];
