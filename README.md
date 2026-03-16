@@ -163,14 +163,6 @@ As this project is designed primarily as a technical assessment, several intenti
 - **Automated Migrations:** Entity Framework migrations run automatically on startup for ease of local testing - in production, these would be managed via secure, on-demand scripts to prevent data loss (among other issues)
 - **In-Repo API Key:** A demo OMDb API key is deliberately included in the repository for a frictionless review process - exposing it here is safe as it exclusively accesses a free, read-only service
 
-## Planned Improvements (V2)
-
-While V1.1 establishes a rock-solid backend foundation and MVP loop, V2 will focus on significantly enhancing the user interface and expanding the application's intelligence.
-
-- **Graphical Terminal UI:** Transition from a basic `while` loop to a proper GUI using `Terminal.Gui` (gui.cs), featuring interactive lists, input fields, and dialog boxes
-- **Improved Logging:** More granular and structured logging via OpenTelemetry for deeper insights into cache hit/miss ratios and pipeline execution
-- **Improved Error Handling:** Implement more robust error handling and user feedback in the CLI, especially around API failures, database issues, and invalid inputs
-
 ## Getting Started
 
 ### Prerequisites
