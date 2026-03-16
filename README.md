@@ -36,7 +36,6 @@ The project is orchestrated using .NET Aspire, which handles containerization, t
    - [Terminal CLI (V1.1)](#terminal-cli-v11)
    - [V1.1 Demo Video](#v11-demo-video)
 - [Technical Considerations \& Known Limitations](#technical-considerations--known-limitations)
-- [Planned Improvements (V2)](#planned-improvements-v2)
 - [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
    - [Running the Project](#running-the-project)
