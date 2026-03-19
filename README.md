@@ -15,6 +15,8 @@
 <div align="center">
 
 [![Build and Release CLI](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml/badge.svg)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/actions/workflows/release.yaml)
+[![GitHub issues](https://img.shields.io/github/issues/JAllsop/Omdb-Terminal-CarTrack-JAllsop)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/JAllsop/Omdb-Terminal-CarTrack-JAllsop)](https://github.com/JAllsop/Omdb-Terminal-CarTrack-JAllsop/pulls)
 
 </div>
 
